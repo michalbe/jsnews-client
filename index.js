@@ -2,10 +2,10 @@ var FBdata = require('./src/data');
 var renderer = require('./src/renderer');
 var nav = require('./src/navigation');
 var notification = require('./src/notification');
-
-notification();
+var config = require('./src/config');
 
 var currentPost;
+var currentCache = '';
 
 var showOnePost = function(answer) {
   answer = parseInt(answer, 10);
@@ -43,7 +43,7 @@ var onePostAction = function(answer) {
       renderer.post(currentPost, true);
       showPostMenu();
   }
-}
+};
 
 var showPostMenu = function(){
   nav.showMenu(
@@ -52,8 +52,26 @@ var showPostMenu = function(){
   );
 }
 
-FBdata(function(err, data) {
-  renderer.setData(data);
-  renderer.all();
-  showListMenu();
-});
+var render = function(){
+  FBdata(function(err, data) {
+    setTimeout(render, config.refreshTime);
+    if (currentCache === '') {
+      // first render, no current cache
+      currentCache = JSON.stringify(data);
+    } else if (currentCache !== JSON.stringify(data)) {
+      // updated! notify!
+      currentCache = JSON.stringify(data);
+      notification();
+    } else if (currentCache === JSON.stringify(data)) {
+      return;
+    }
+
+    renderer.setData(data);
+    renderer.all();
+    showListMenu();
+
+    // check for update every config.refreshTime
+  });
+}
+
+render();
