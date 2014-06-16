@@ -64,12 +64,6 @@ var post = function(nr, full) {
     }
   }
 
-  // DEBUG
-  // if (full) {
-  //   console.log(currentPost);
-  //   console.log(currentPost.comments.data[1]);
-  // }
-
 }
 
 var comment = function(com) {
