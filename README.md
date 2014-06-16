@@ -26,7 +26,7 @@ Czy jesteś znudzony tłumaczeniem swoim współpracownikom i przełożonym że 
 Wiele jeszcze zostało do zrobienia, m.in.:
   *  Komentowanie z poziomu clienta
   *  Lajkowanie (postów i komentarzy)
-  *  Wiecej mówiące updaty (nie tylko 'Update!', bardziej w stylu 'XYZ dodał komentarz do postu ABC')
+  *  Wiecej mówiące notyfikacje (nie tylko 'Update!', bardziej w stylu 'XYZ dodał komentarz do postu ABC')
   *  Otwieranie załączonych do postów i komentarzy linków bezpośrednio z aplikacji
   *  Obsługa siostrzanych grup:
     * JS News: After Hours
