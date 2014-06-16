@@ -1,6 +1,10 @@
 var FBdata = require('./src/data');
 var renderer = require('./src/renderer');
 var nav = require('./src/navigation');
+var notification = require('./src/notification');
+
+notification();
+
 var currentPost;
 
 var showOnePost = function(answer) {
