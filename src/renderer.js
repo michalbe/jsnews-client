@@ -43,25 +43,35 @@ var post = function(nr, full) {
       comments.toString().yellow
     );
   } else {
-      likes = likes > 0 ?
-        likes.toString().yellow + ' [ '.magenta +
-        currentPost.likes.data.map(
-          function(l) {
-            return l.name;
-          }).join(', ').yellow +
-        ' ]'.magenta
-        : 0;
+    likes = likes > 0 ?
+      likes.toString().yellow + ' [ '.magenta +
+      currentPost.likes.data.map(
+        function(l) {
+          return l.name;
+        }).join(', ').yellow +
+      ' ]'.magenta
+      : 0;
 
-  console.log(
-    'Lajki: '.bold.magenta +
-    likes)
+    console.log('Lajki: '.bold.magenta + likes);
+
   }
 
   if (full) {
     console.log(currentPost);
-    console.log(currentPost.comments.data[0]);
+    console.log(currentPost.comments.data[1]);
   }
 
+}
+
+var comment = function(com) {
+  var date = new Date(com.created_time).toLocaleString().grey;
+  var author = com.from.name.magenta.bold;
+  var msg = com.message.yellow;
+  var likes = com.like_count.yellow;
+
+  console.log(date + ' | ' + author);
+  console.log(msg);
+  console.log('Lajki: '.magenta.bold + likes);
 }
 
 var all = function() {
