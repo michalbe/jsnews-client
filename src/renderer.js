@@ -47,5 +47,7 @@ var all = function() {
 
 module.exports = {
   setData: setData,
-  all: all
+  all: all,
+  post: post,
+  clear: clearScreen
 }
