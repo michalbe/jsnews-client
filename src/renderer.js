@@ -25,13 +25,24 @@ var post = function(nr, full) {
     content = content.substr(0, 150) + '...';
   }
   console.log('Treść: '.bold.magenta + content.yellow);
-  console.log(currentPost);
+
+  var likes = currentPost.likes ? currentPost.likes.data.length : 0;
+  var comments = currentPost.comments ? currentPost.comments.data.length : 0;
+  console.log(
+    'Lajki: '.bold.magenta +
+    likes.toString().yellow +
+    '  |  Komentarze: '.bold.magenta +
+    comments.toString().yellow
+  );
+  //console.log(currentPost);
 }
 
 var all = function() {
   clearScreen();
   numberOfPosts();
-  post(4);
+  for (var i = 0, l = data.length;  i < l; i++) {
+    post(i);
+  }
 }
 
 module.exports = {
