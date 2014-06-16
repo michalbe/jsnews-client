@@ -26,6 +26,9 @@ var onePostAction = function(answer) {
   answer = answer.toLowerCase();
   switch (answer) {
     case 'f':
+      require('child_process').exec('open ' + renderer.getPostUrl(currentPost));
+      renderer.post(currentPost, true);
+      showPostMenu();
       break;
     case 'w':
       currentPost = null;
