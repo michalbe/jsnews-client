@@ -1,0 +1,14 @@
+{
+  "author": "Michal Budzynski <michal@virtualdesign.pl> (https://github.com/michalbe)",
+  "name": "jsnews_client",
+  "description": "NodeJS Client for JSNews group on FB",
+  "version": "0.0.1",
+  "homepage": "https://github.com/michalbe/jsnews-client",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:michalbe/jsnews-client.git"
+  },
+  "dependencies": {
+    "fb": "~0.7.0"
+  }
+}
