@@ -1,8 +1,10 @@
 var colors = require('colors');
 var data;
+var postCount = 0;
 
 var setData = function(d) {
   data = d;
+  postCount = d.length;
 }
 
 var clearScreen = function(){
@@ -10,7 +12,7 @@ var clearScreen = function(){
 }
 
 var numberOfPosts = function() {
-  var posts = 'Ilość postów: '.magenta.bold + data.length.toString().yellow;
+  var posts = 'Ilość postów: '.magenta.bold + postCount.toString().yellow;
   console.log(posts);
 }
 
@@ -49,5 +51,8 @@ module.exports = {
   setData: setData,
   all: all,
   post: post,
-  clear: clearScreen
+  clear: clearScreen,
+  getNumberOfPosts: function() {
+    return postCount
+  }
 }
