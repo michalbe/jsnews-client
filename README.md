@@ -19,13 +19,14 @@ Aby uruchomić JS News: Client potrzeba:
   *  Cieszymy się, bawimy i radujemy.
 
 ### Czemu? ###
-Znudzony byłem ostatnimi czasy tłumaczeniem moim współpracownikom i przełożonym że większość czasu na Facebooku spędzam dyskutując o JavaScriptowych problemach, rozwiązaniach, projektach i pomysłach. Robiąc to samo w terminalu cały czas wyglądam jakbym pracował :)
+Czy jesteś znudzony łumaczeniem swoim współpracownikom i przełożonym że większość czasu na Facebooku spędzasz dyskutując o JavaScriptowych problemach, rozwiązaniach, projektach i pomysłach. Robiąc to samo w terminalu cały czas wyglądasz jakbyś pracował :)!
 ![lista tematów](static/jsnewslista.jpg)
 
 ### Co dalej? ###
 Wiele jeszcze zostało do zrobienia, m.in.:
   *  Komentowanie z poziomu clienta
   *  Lajkowanie (postów i komentarzy)
+  *  Wiecej mówiące updaty (nie tylko 'Update!', bardziej w stylu 'XYZ dodał komentarz do postu ABC')
   *  Otwieranie załączonych do postów i komentarzy linków bezpośrednio z aplikacji
   *  Obsługa siostrzanych grup:
     * JS News: After Hours
