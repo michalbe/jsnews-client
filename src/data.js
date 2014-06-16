@@ -13,7 +13,7 @@ module.exports = function(cb){
     }
 
     var accessToken = res.access_token;
-    FB.api('/' + config.groups[0] + '/feed?access_token='+accessToken, function (res) {
+    FB.api('/' + config.groups[0] + '/feed?limit=' + config.maxPosts + '&access_token='+accessToken, function (res) {
       if(!res || res.error) {
           cb(!res ? 'error occurred' : res.error);
           return;
