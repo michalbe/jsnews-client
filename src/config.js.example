@@ -2,7 +2,7 @@ module.exports = {
   client_id: XXXXXXXXXXXXXXXXX,
   client_secret: XXXXXXXXXXXXX,
   maxPosts: 8,
-  refreshTime: 2000, //2s
+  refreshTime: 10000, //2s
   groups: [
     '217169631654737', //JSNEWS
     '257881290932879', //JSNEWS:After hours
