@@ -1,0 +1,4 @@
+module.exports = {
+  client_id: XXXXXXXXXXXXXXXXX,
+  client_secret: XXXXXXXXXXXXX
+}
