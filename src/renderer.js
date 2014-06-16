@@ -17,6 +17,11 @@ var numberOfPosts = function() {
 }
 
 var post = function(nr, full) {
+  var likes;
+  var comments;
+
+  if (full) clearScreen();
+
   var currentPost = data[nr];
   console.log('-------------------------'.magenta);
   console.log('numer postu: '.magenta + nr.toString().magenta);
@@ -28,15 +33,35 @@ var post = function(nr, full) {
   }
   console.log('Treść: '.bold.magenta + content.yellow);
 
-  var likes = currentPost.likes ? currentPost.likes.data.length : 0;
-  var comments = currentPost.comments ? currentPost.comments.data.length : 0;
+  likes = currentPost.likes ? currentPost.likes.data.length : 0;
+  comments = currentPost.comments ? currentPost.comments.data.length : 0;
+  if (!full) {
+    console.log(
+      'Lajki: '.bold.magenta +
+      likes.toString().yellow +
+      '  |  Komentarze: '.bold.magenta +
+      comments.toString().yellow
+    );
+  } else {
+      likes = likes > 0 ?
+        likes.toString().yellow + ' [ '.magenta +
+        currentPost.likes.data.map(
+          function(l) {
+            return l.name;
+          }).join(', ').yellow +
+        ' ]'.magenta
+        : 0;
+
   console.log(
     'Lajki: '.bold.magenta +
-    likes.toString().yellow +
-    '  |  Komentarze: '.bold.magenta +
-    comments.toString().yellow
-  );
-  //console.log(currentPost);
+    likes)
+  }
+
+  if (full) {
+    console.log(currentPost);
+    console.log(currentPost.comments.data[0]);
+  }
+
 }
 
 var all = function() {
