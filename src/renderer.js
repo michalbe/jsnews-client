@@ -54,24 +54,31 @@ var post = function(nr, full) {
 
     console.log('Lajki: '.bold.magenta + likes);
 
+    console.log('\nKomentarze:\n'.bold.magenta);
+    if (comments > 0) {
+      for (var i = 0; i < comments; i++) {
+        comment(currentPost.comments.data[i]);
+      }
+    } else {
+      console.log('brak...'.italic.grey);
+    }
   }
-
-  if (full) {
-    console.log(currentPost);
-    console.log(currentPost.comments.data[1]);
-  }
+  // if (full) {
+  //   console.log(currentPost);
+  //   console.log(currentPost.comments.data[1]);
+  // }
 
 }
 
 var comment = function(com) {
   var date = new Date(com.created_time).toLocaleString().grey;
-  var author = com.from.name.magenta.bold;
+  var author = com.from.name.magenta;
   var msg = com.message.yellow;
-  var likes = com.like_count.yellow;
+  var likes = com.like_count.toString().yellow;
 
-  console.log(date + ' | ' + author);
+  console.log(date + '\n' + author);
   console.log(msg);
-  console.log('Lajki: '.magenta.bold + likes);
+  console.log('Lajki: '.magenta + likes + '\n');
 }
 
 var all = function() {
