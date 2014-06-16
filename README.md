@@ -19,7 +19,7 @@ Aby uruchomić JS News: Client potrzeba:
   *  Cieszymy się, bawimy i radujemy.
 
 ### Czemu? ###
-Czy jesteś znudzony tłumaczeniem swoim współpracownikom i przełożonym że większość czasu na Facebooku spędzasz dyskutując o JavaScriptowych problemach, rozwiązaniach, projektach i pomysłach. Robiąc to samo w terminalu cały czas wyglądasz jakbyś pracował :)!
+Czy jesteś znudzony tłumaczeniem swoim współpracownikom i przełożonym że większość czasu na Facebooku spędzasz dyskutując o JavaScriptowych problemach, rozwiązaniach, projektach i pomysłach, i w żadnym wypadku nie jest to prokrastynacja? Robiąc to samo w terminalu cały czas wyglądasz jakbyś pracował :)!
 ![lista tematów](static/jsnewslista.jpg)
 
 ### Co dalej? ###
