@@ -1,0 +1,9 @@
+module.exports = {
+  client_id: XXXXXXXXXXXXXXXXX,
+  client_secret: XXXXXXXXXXXXX,
+  groups: [
+    '217169631654737', //JSNEWS
+    '257881290932879', //JSNEWS:After hours
+    'jsjobs' // JSNEWS:Jobs
+  ]
+}
