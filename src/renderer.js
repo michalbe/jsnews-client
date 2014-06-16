@@ -63,6 +63,8 @@ var post = function(nr, full) {
       console.log('brak...'.italic.grey);
     }
   }
+
+  // DEBUG
   // if (full) {
   //   console.log(currentPost);
   //   console.log(currentPost.comments.data[1]);
@@ -96,5 +98,8 @@ module.exports = {
   clear: clearScreen,
   getNumberOfPosts: function() {
     return postCount
+  },
+  getPostUrl: function(nr){
+    return data[nr].actions[0].link
   }
 }
