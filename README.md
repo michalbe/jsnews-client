@@ -35,6 +35,6 @@ Wiele jeszcze zostało do zrobienia, m.in.:
   *  Schematy kolorystyczne zmieniane z configu (wiem że nie każdy ma ciemne tło w terminalu)
   *  I pewnie krocie innych pomysłów.
 
-Jeśli masz czas i chęć rozwijać projekt, zapraszam (**dla każdego kto wyląduje rozsądny Pull Request w `masterze` darmowy bilet na tegorocznych [onGameStart](http://onGameStart)**)
+Jeśli masz czas i chęć rozwijać projekt, zapraszam (**dla każdego kto wyląduje rozsądny Pull Request w `masterze` darmowy bilet na tegorocznych [onGameStart](http://onGameStart.com)**)
 
 ![Szczegóły postu](static/jsnews-detail.jpg)
