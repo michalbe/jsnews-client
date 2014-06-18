@@ -9,9 +9,9 @@ JS News: Client to oparty na node.js, commandlineowy klient do Waszej ulubionej 
 ![Growl notification](static/jsnewsgrowl.jpg)
 
 ### Jak? ###
-Aby uruchomić JS News: Client potrzeba:
+Aby uruchomić JS News: Client należy:
   *  Stworzyć swój plik `config.js` w katalogu `/src/`. Można wykorzystać do tego plik `config.js.example` zamieszczony w tym samym katalogu.
-  *  Do poprawnego działania potrzebujemy facebookowe klucze - prywatny i publiczny. Przepraszam, ale nie chciało mi się bawić w serwerowe zagadnienia (nie udaję nawet że umiem), najprościej więc będzie stworzyć nową aplikację [TUTAJ](https://developers.facebook.com/), następnie `APPS` -> `Create New` i wygenerować dla niej klucze (całość powinna trwać około 2.5 sec)
+  *  Do poprawnego działania potrzebujemy facebookowych kluczy - prywatnego i publicznego. Przepraszam, ale nie chciało mi się bawić w serwerowe zagadnienia (nie udaję nawet że umiem), najprościej więc będzie stworzyć nową aplikację [TUTAJ](https://developers.facebook.com/), następnie `APPS` -> `Create New` i wygenerować dla niej klucze (całość powinna trwać około 2.5 sec)
   ![Facebookowe klucze](static/keys.jpg)
   *  Dependencje `npm`. W katalogu głównym aplikacji odpalamy `npm install`.
   *  Jeśli nie mamy `Growla` lub `MacOsXa`, czytamy tutaj: [https://github.com/visionmedia/node-growl#install](https://github.com/visionmedia/node-growl#install)
@@ -35,6 +35,6 @@ Wiele jeszcze zostało do zrobienia, m.in.:
   *  Schematy kolorystyczne zmieniane z configu (wiem że nie każdy ma ciemne tło w terminalu)
   *  I pewnie krocie innych pomysłów.
 
-Jeśli masz czas i chęć rozwijać projekt, zapraszam (**dla każdego kto wyląduje rozsądny Pull Request w `masterze` darmowy bilet na tegorocznych [onGameStart](http://onGameStart.com)**)
+Jeśli masz czas i chęć rozwijać projekt, zapraszam (**dla każdego kto wyląduje rozsądny Pull Request w `masterze` darmowy bilet na tegoroczny [onGameStart](http://onGameStart.com)**)
 
 ![Szczegóły postu](static/jsnews-detail.jpg)
