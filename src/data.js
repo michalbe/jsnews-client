@@ -8,7 +8,7 @@ module.exports = function(cb){
     grant_type: 'client_credentials'
   }, function (res) {
     if(!res || res.error) {
-      ccb(!res ? 'error occurred' : res.error);
+      cb(!res ? 'error occurred' : res.error);
       return;
     }
 
