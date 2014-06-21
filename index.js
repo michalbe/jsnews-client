@@ -1,4 +1,4 @@
-var FBdata = require('./src/data');
+var data = require('./src/data');
 var renderer = require('./src/renderer');
 var nav = require('./src/navigation');
 var notification = require('./src/notification');
@@ -6,6 +6,7 @@ var config = require('./src/config');
 
 var currentPost;
 var currentCache = '';
+var FB = '';
 
 var showOnePost = function(answer) {
   answer = parseInt(answer.menu, 10);
@@ -53,7 +54,7 @@ var showPostMenu = function(){
 }
 
 var render = function(){
-  FBdata(function(err, data) {
+  FB.getWall(function(err, data) {
     setTimeout(render, config.refreshTime);
     if (currentCache === '') {
       // first render, no current cache
@@ -74,4 +75,11 @@ var render = function(){
   });
 }
 
-render();
+var init = function () {
+    data(function (err, api) {
+        FB = api;
+        render();
+    });
+};
+
+init();
