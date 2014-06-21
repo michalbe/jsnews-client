@@ -1,16 +1,19 @@
-var readline = require('readline');
+var inquirer = require('inquirer');
 
-var rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
-});
+var prompt;
 
-var showMenu = function(title, cb) {
-  rl.question(title.magenta.bold, function(answer) {
-    cb(answer);
-  });
+var showMenu = function(message, cb) {
+    prompt && prompt.rl && prompt.rl.close();
+    
+    prompt = inquirer.prompt({
+        message: message,
+        type: 'input',
+        name: 'menu',
+    }, function(answer) {
+        cb(answer);
+    });
 };
 
 module.exports = {
-  showMenu: showMenu
-}
+    showMenu: showMenu
+};
