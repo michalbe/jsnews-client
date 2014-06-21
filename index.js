@@ -8,7 +8,7 @@ var currentPost;
 var currentCache = '';
 
 var showOnePost = function(answer) {
-  answer = parseInt(answer, 10);
+  answer = parseInt(answer.menu, 10);
   if (typeof answer === 'number' && !Number.isNaN(answer) && answer < renderer.getNumberOfPosts()) {
     currentPost = answer;
     renderer.post(answer, true);
@@ -27,7 +27,7 @@ var showListMenu = function() {
 };
 
 var onePostAction = function(answer) {
-  answer = answer.toLowerCase();
+  answer = answer.menu.toLowerCase();
   switch (answer) {
     case 'f':
       require('child_process').exec('open ' + renderer.getPostUrl(currentPost));
