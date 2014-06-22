@@ -16,5 +16,10 @@ module.exports = {
             name: 'JS News: Jobs',
             id: '192228117567250'
         }
-    ]
-}
+    ],
+    theme: {
+        main: 'magenta',
+        second: 'yellow',
+        disable: 'grey'
+    }
+};
