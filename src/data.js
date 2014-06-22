@@ -12,10 +12,15 @@ module.exports = function(cb){
             return;
         }
 
+        var group = 0;
         var accessToken = res.access_token;
         
+        var setGroup = function (groupID) {
+            group = groupID;
+        };
+        
         var getWall = function (callback) {
-            FB.api('/' + config.groups[0] + '/feed?limit=' + config.maxPosts + '&access_token='+accessToken, function (res) {
+            FB.api('/' + group + '/feed?limit=' + config.maxPosts + '&access_token='+accessToken, function (res) {
                 if(!res || res.error) {
                     cb(!res ? 'error occurred' : res.error);
                     return;
@@ -25,7 +30,8 @@ module.exports = function(cb){
         };
         
         cb(null, {
-            getWall: getWall 
+            getWall: getWall,
+            setGroup: setGroup
         });
     });
 };

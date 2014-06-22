@@ -4,27 +4,52 @@ var nav = require('./src/navigation');
 var notification = require('./src/notification');
 var config = require('./src/config');
 
-var currentPost;
-var currentCache = '';
-var FB = '';
+var currentGroup = 0;
+var currentPost = null;
+var currentCache = null;
+var FB = null;
 
-var showOnePost = function(answer) {
-  answer = parseInt(answer.menu, 10);
-  if (typeof answer === 'number' && !Number.isNaN(answer) && answer < renderer.getNumberOfPosts()) {
-    currentPost = answer;
-    renderer.post(answer, true);
-    showPostMenu();
-  } else {
-    renderer.all();
-    showListMenu();
-  }
+var renderGroupMenu = function () {
+    var groups = [];
+    
+    renderer.clear();
+    config.groups.forEach(function(group, index) {
+        groups.push({
+            name: group.name,
+            value: index
+        });
+    });
+    
+    nav.showGroupList(groups, function (answer) {
+        currentGroup = config.groups[answer.currentGroup];
+        FB.setGroup(currentGroup.id);
+        renderWall();
+    });
 };
 
-var showListMenu = function() {
-  nav.showMenu(
-    'Wybierz numer postu do otwarcia lub Ctrl+C aby wyjść',
-    showOnePost
-  );
+var renderWallMenu = function () {
+    nav.showMenu(
+        "Wybierz numer postu do otwarcia, 'g' by wybrać ponownie grupę lub Ctrl+C aby wyjść",
+        wallActions
+    );
+};
+
+var wallActions = function (answer) {
+    var key = answer.menu.toLowerCase();
+    if (key === 'g') {
+        renderer.clear();
+        renderGroupMenu();
+    } 
+    
+    key = parseInt(key, 10);
+    
+    if (typeof key === 'number' && !Number.isNaN(key) && key < renderer.getNumberOfPosts()) {
+        currentPost = key;
+        renderer.post(key, true);
+        showPostMenu();
+    } else {
+        renderWallMenu();  
+    }
 };
 
 var onePostAction = function(answer) {
@@ -38,7 +63,7 @@ var onePostAction = function(answer) {
     case 'w':
       currentPost = null;
       renderer.all();
-      showListMenu();
+      renderWallMenu();
       break;
     default:
       renderer.post(currentPost, true);
@@ -53,9 +78,9 @@ var showPostMenu = function(){
   );
 }
 
-var render = function(){
+var renderWall = function(){
   FB.getWall(function(err, data) {
-    setTimeout(render, config.refreshTime);
+    setTimeout(renderWall, config.refreshTime);
     if (currentCache === '') {
       // first render, no current cache
       currentCache = JSON.stringify(data);
@@ -69,7 +94,7 @@ var render = function(){
 
     renderer.setData(data);
     renderer.all();
-    showListMenu();
+    renderWallMenu();
 
     // check for update every config.refreshTime
   });
@@ -78,7 +103,7 @@ var render = function(){
 var init = function () {
     data(function (err, api) {
         FB = api;
-        render();
+        renderGroupMenu();
     });
 };
 
