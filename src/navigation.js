@@ -6,7 +6,6 @@ var prompt;
 
 var showGroupList = function(message, groups, cb) {
     closePrompt();
-    prompt = false;
     
     prompt = inquirer.prompt({
         message: message,
@@ -20,8 +19,7 @@ var showGroupList = function(message, groups, cb) {
 
 var showCheckBoxes = function (message, choices, cb) {
     closePrompt();
-    prompt = false;
-    
+
     choices.push(new inquirer.Separator());
     choices.push({name: 'Usuń wszystkie', value: 'all'});
     choices.push({name: 'Wróć', value: 'back'});
@@ -53,6 +51,7 @@ var showMenu = function(message, cb, validator) {
 
 var closePrompt = function () {
     return prompt && prompt.rl && prompt.rl.close();
+    prompt = false;
 };
 
 module.exports = {

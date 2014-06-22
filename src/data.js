@@ -31,8 +31,19 @@ module.exports = function(cb){
             });
         };
         
+        var getPost = function (id, callback) {
+            FB.api(id + '?access_token='+accessToken, function (res) {
+                if(!res || res.error) {
+                    cb(!res ? 'error occurred' : res.error);
+                    return;
+                }
+                callback(null, res);
+            });
+        };
+        
         cb(null, {
             getWall: getWall,
+            getPost: getPost,
             setGroup: setGroup
         });
     });

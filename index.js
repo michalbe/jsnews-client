@@ -1,4 +1,4 @@
-/*global require:false, console:false, module:false, setTimeout: false*/
+/*global require:false, console:false, module:false, setTimeout: false, process: false*/
 
 var data = require('./src/data');
 var renderer = require('./src/renderer');
@@ -74,7 +74,7 @@ var wallActions = function (answer) {
             }
             stopRender = true;
             nav.showCheckBoxes('Zaznacz posty do usunięcia z listy obserwowanych', choices, function (answer) {
-                renderWallMenu();
+                removeFollowPost(answer);
             });
             break;
         case 'close':
@@ -86,12 +86,13 @@ var wallActions = function (answer) {
     }
 };
 
-var removeFollowPost = function (posts) {
-    if (answer.list.indexOf('all') > -1) {
+var removeFollowPost = function (answer) {
+    var option = answer.list;
+    if (option.indexOf('all') > -1) {
         follows = [];
-    } else {
-        for (var i = posts.length-1; i > -1; i--) {    
-            follows.splice(parseInt(posts[i], 10),1);
+    } else if (option.length && option.indexOf('back') === -1) {
+        for (var i = option.length-1; i > -1; i--) {    
+            follows.splice(parseInt(option[i], 10),1);
         }
     }
     
@@ -174,6 +175,23 @@ var checkLatestPost = function (post) {
     }
 };
 
+var checkFollowPosts = function (post, id) {
+    FB.getPost(post.id, function (err, data) {
+        var followComCounts = post.comments ? post.comments.data.length : 0;
+        var updatedComCounts = data.comments ? data.comments.data.length : 0;
+        
+        if (followComCounts !== updatedComCounts) {
+            notification(
+                currentGroup.name
+                , post.from.name + ' skomentował(a) obserwowany post'
+                , post.comments.data[followComCounts - 1].message.substr(0, 50) + '...'
+            );
+        }
+        
+        follows[id] = data;
+    }); 
+};
+
 var renderWall = function () {
     FB.getWall(function (err, data) {
         setTimeout(renderWall, config.refreshTime);
@@ -184,6 +202,9 @@ var renderWall = function () {
         
         currentCache = JSON.stringify(data);
         checkLatestPost(data[0]);
+        for (var i = 0, l = follows.length; i < l; i++) {
+            checkFollowPosts(follows[i], i);   
+        }
         
         renderer.setData(data);
         
