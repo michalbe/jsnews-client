@@ -11,11 +11,11 @@ var currentPost = null;
 var currentCache = null;
 var lastCreatedPost = null;
 var FB = null;
+var openingPost = false;
 
 var renderGroupMenu = function () {
     var groups = [];
     
-    renderer.clear();
     config.groups.forEach(function(group, index) {
         groups.push({
             name: group.name,
@@ -23,55 +23,85 @@ var renderGroupMenu = function () {
         });
     });
     
-    nav.showGroupList(groups, function (answer) {
-        currentGroup = config.groups[answer.currentGroup];
+    renderer.clear();
+    nav.showGroupList('Wybierz grupę', groups, function (answer) {
+        currentCache = null;
+        currentGroup = config.groups[answer.option];
         FB.setGroup(currentGroup.id);
         renderWall();
     });
 };
 
 var renderWallMenu = function () {
-    nav.showMenu(
-        "Wybierz numer postu do otwarcia, 'g' by wybrać ponownie grupę lub Ctrl+C aby wyjść",
-        wallActions
-    );
+    var options = [
+        {name: 'Otwórz post', value: 'open'},
+        {name: 'Wybierz ponownie grupę', value: 'groups'},
+        {name: 'Zamknij  aplikacje', value: 'close'}
+    ];
+    
+    nav.showGroupList("Menu", options, wallActions);
 };
 
 var wallActions = function (answer) {
-    var key = answer.menu.toLowerCase();
-    if (key === 'g') {
-        renderer.clear();
-        renderGroupMenu();
-    } 
+    answer = answer.option.toLowerCase();
     
-    key = parseInt(key, 10);
-    
-    if (typeof key === 'number' && !Number.isNaN(key) && key < renderer.getNumberOfPosts()) {
-        currentPost = key;
-        renderer.renderPost(key, true);
-        renderPostMenu();
-    } else {
-        renderWallMenu();  
+    switch(answer) {
+        case 'groups':
+            renderer.clear();
+            renderGroupMenu();
+            break;
+        case 'open':
+            openingPost = true;
+            nav.showMenu("Podaj numer postu do otwarcia (0-7)", openSinglePost, function (value) {
+                var number = parseInt(value, 10);
+                if (typeof number === 'number' && !Number.isNaN(number) && number < renderer.getNumberOfPosts()) {
+                    return true;
+                }
+
+                return "Musisz podać liczbę z przedziału od 0 do 7";
+            });
+            break;
+        case 'close':
+            process.exit();
+            break;
+        default:
+            renderWallMenu();
+            break;
     }
 };
 
+var openSinglePost = function (answer) {
+    var key = answer.value;
+    
+    openingPost = false;
+    currentPost = key;
+    
+    console.log(key);
+    
+    renderer.renderPost(key, true);
+    renderPostMenu();
+};
+
 var renderPostMenu = function () {
-    nav.showMenu(
-        "Wybierz 'f' aby zobaczyć post w przeglądarce lub 'w' aby wrócić",
-        postActions
-    );
+    var options = [
+        {name: 'Zobacz post w przeglądarce', value: 'browser'},
+        {name: 'Wróć do listy postów', value: 'back'}
+    ];
+    
+    nav.showGroupList("Menu", options, postActions);
 };
 
 var postActions = function (answer) {
-    answer = answer.menu.toLowerCase();
+    answer = answer.option.toLowerCase();
     
     switch(answer) {
-        case 'w':
+        case 'back':
             currentPost = null;
             renderer.renderWall();
             renderWallMenu();
             break;
-        case 'f':
+
+        case 'browser':
             require('child_process').exec('open ' + renderer.getPostUrl(currentPost));
             renderer.renderPost(currentPost, true);
             renderPostMenu();
@@ -83,7 +113,6 @@ var postActions = function (answer) {
 };
 
 var checkLatestPost = function (post) {
-    console.log(post);
     if (post.created_time === post.updated_time && lastCreatedPost !== post.id) {
         notification(
             currentGroup.name
@@ -105,7 +134,7 @@ var renderWall = function () {
         currentCache = JSON.stringify(data);
         checkLatestPost(data[0]);
         
-        if (currentPost) return;
+        if (openingPost || currentPost) return;
         
         renderer.clear();
         renderer.setData(data);
