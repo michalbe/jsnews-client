@@ -46,59 +46,61 @@ var wallActions = function (answer) {
     if (typeof key === 'number' && !Number.isNaN(key) && key < renderer.getNumberOfPosts()) {
         currentPost = key;
         renderer.renderPost(key, true);
-        showPostMenu();
+        renderPostMenu();
     } else {
         renderWallMenu();  
     }
 };
 
-var onePostAction = function(answer) {
-  answer = answer.menu.toLowerCase();
-  switch (answer) {
-    case 'f':
-      require('child_process').exec('open ' + renderer.getPostUrl(currentPost));
-      renderer.renderPost(currentPost, true);
-      showPostMenu();
-      break;
-    case 'w':
-      currentPost = null;
-      renderer.renderWall();
-      renderWallMenu();
-      break;
-    default:
-      renderer.renderPost(currentPost, true);
-      showPostMenu();
-  }
+var renderPostMenu = function () {
+    nav.showMenu(
+        "Wybierz 'f' aby zobaczyć post w przeglądarce lub 'w' aby wrócić",
+        postActions
+    );
 };
 
-var showPostMenu = function(){
-  nav.showMenu(
-    "Wybierz 'f' aby zobaczyć post w przeglądarce lub 'w' aby wrócić" ,
-    onePostAction
-  );
-}
-
-var renderWall = function(){
-  FB.getWall(function(err, data) {
-    setTimeout(renderWall, config.refreshTime);
-    if (currentCache === '') {
-      // first render, no current cache
-      currentCache = JSON.stringify(data);
-    } else if (currentCache !== JSON.stringify(data)) {
-      // updated! notify!
-      currentCache = JSON.stringify(data);
-      notification();
-    } else if (currentCache === JSON.stringify(data)) {
-      return;
+var postActions = function (answer) {
+    answer = answer.menu.toLowerCase();
+    
+    switch(answer) {
+        case 'w':
+            currentPost = null;
+            renderer.renderWall();
+            renderWallMenu();
+            break;
+        case 'f':
+            require('child_process').exec('open ' + renderer.getPostUrl(currentPost));
+            renderer.renderPost(currentPost, true);
+        default:
+            renderPostMenu();
+            break;
     }
+};
 
-    renderer.setData(data);
-    renderer.renderWall();
-    renderWallMenu();
+var renderWall = function () {
+    FB.getWall(function (err, data) {
+        setTimeout(renderWall, config.refreshTime);
+        
+        var dataString = JSON.stringify(data);
+        
+        if (currentCache && currentCache === dataString) return;
+        
+        currentCache = JSON.stringify(data);
+        
+        if (currentPost) return;
+        
+        renderer.clear();
+        renderer.setData(data);
+        renderer.renderWall();
+        renderWallMenu();
+    });
+};
 
-    // check for update every config.refreshTime
-  });
-}
+var renderSinglePost = function (id) {
+    currentPost = id;
+    renderer.renderPost(id, true);
+    renderPostMenu();
+};
 
 var init = function () {
     data(function (err, api) {

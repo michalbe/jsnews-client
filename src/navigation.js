@@ -5,6 +5,8 @@ var inquirer = require('inquirer');
 var prompt;
 
 var showGroupList = function(groups, cb) {
+    closePrompt();
+    
     inquirer.prompt({
         message: 'Wybierz grupę',
         type: 'list',
@@ -16,7 +18,7 @@ var showGroupList = function(groups, cb) {
 };
 
 var showMenu = function(message, cb) {
-    prompt && prompt.rl && prompt.rl.close();
+    closePrompt();
     
     prompt = inquirer.prompt({
         message: message,
@@ -25,6 +27,10 @@ var showMenu = function(message, cb) {
     }, function(answer) {
         cb(answer);
     });
+};
+
+var closePrompt = function () {
+    return prompt && prompt.rl && prompt.rl.close();
 };
 
 module.exports = {
