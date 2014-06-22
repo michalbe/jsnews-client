@@ -12,6 +12,7 @@ var currentCache = null;
 var lastCreatedPost = null;
 var FB = null;
 var openingPost = false;
+var follows = [];
 
 var renderGroupMenu = function () {
     var groups = [];
@@ -35,6 +36,7 @@ var renderGroupMenu = function () {
 var renderWallMenu = function () {
     var options = [
         {name: 'Otwórz post', value: 'open'},
+        {name: 'Zobacz listę postów obserwowanych', value: 'followlist'},
         {name: 'Wybierz ponownie grupę', value: 'groups'},
         {name: 'Zamknij  aplikacje', value: 'close'}
     ];
@@ -61,6 +63,8 @@ var wallActions = function (answer) {
                 return "Musisz podać liczbę z przedziału od 0 do 7";
             });
             break;
+        case 'followlist':
+            console.log(follows);
         case 'close':
             process.exit();
             break;
@@ -83,8 +87,19 @@ var openSinglePost = function (answer) {
 };
 
 var renderPostMenu = function () {
+    var followMsg = 'Obserwuj post';
+    var followValue = 'follow';
+    
+    for (var i = 0, l = follows.length; i < l; i++) {
+        if (follows[i].id === renderer.getPost(currentPost).id) {
+            followMsg = 'Usuń z obserwowanych';
+            followValue = 'unfollow.' + i;
+        }
+    }
+    
     var options = [
         {name: 'Zobacz post w przeglądarce', value: 'browser'},
+        {name: followMsg, value: followValue},
         {name: 'Wróć do listy postów', value: 'back'}
     ];
     
@@ -92,15 +107,24 @@ var renderPostMenu = function () {
 };
 
 var postActions = function (answer) {
-    answer = answer.option.toLowerCase();
-    
-    switch(answer) {
+    answer = answer.option.toLowerCase().split('.');
+
+    switch(answer[0]) {
         case 'back':
             currentPost = null;
             renderer.renderWall();
             renderWallMenu();
             break;
-
+        case 'follow':
+            follows.push(renderer.getPost(currentPost));
+            renderer.renderPost(currentPost, true);
+            renderPostMenu();
+            break;
+        case 'unfollow':
+            follows.splice(parseInt(answer[1], 10), 1);
+            renderer.renderPost(currentPost, true);
+            renderPostMenu();
+            break;
         case 'browser':
             require('child_process').exec('open ' + renderer.getPostUrl(currentPost));
             renderer.renderPost(currentPost, true);
