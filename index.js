@@ -9,6 +9,7 @@ var config = require('./src/config');
 var currentGroup = 0;
 var currentPost = null;
 var currentCache = null;
+var lastCreatedPost = null;
 var FB = null;
 
 var renderGroupMenu = function () {
@@ -81,6 +82,18 @@ var postActions = function (answer) {
     }
 };
 
+var checkLatestPost = function (post) {
+    console.log(post);
+    if (post.created_time === post.updated_time && lastCreatedPost !== post.id) {
+        notification(
+            currentGroup.name
+            , post.from.name + ' dodał(a) nowy post'
+            , post.message && post.message.substr(0, 50) + '...'
+        );
+        lastCreatedPost = post.id;
+    }
+};
+
 var renderWall = function () {
     FB.getWall(function (err, data) {
         setTimeout(renderWall, config.refreshTime);
@@ -90,6 +103,7 @@ var renderWall = function () {
         if (currentCache && currentCache === dataString) return;
         
         currentCache = JSON.stringify(data);
+        checkLatestPost(data[0]);
         
         if (currentPost) return;
         
