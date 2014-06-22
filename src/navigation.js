@@ -4,30 +4,34 @@ var inquirer = require('inquirer');
 
 var prompt;
 
-var showGroupList = function(groups, cb) {
+var showGroupList = function(message, groups, cb) {
     closePrompt();
+    prompt = false;
     
-    inquirer.prompt({
-        message: 'Wybierz grupę',
+    prompt = inquirer.prompt({
+        message: message,
         type: 'list',
-        name: 'currentGroup',
+        name: 'option',
         choices: groups
     }, function (answer) {
         cb(answer); 
     });
 };
 
-var showMenu = function(message, cb) {
+var showMenu = function(message, cb, validator) {
     closePrompt();
     
     prompt = inquirer.prompt({
         message: message,
         type: 'input',
-        name: 'menu',
+        name: 'value',
+        validate: validator
     }, function(answer) {
         cb(answer);
     });
 };
+
+
 
 var closePrompt = function () {
     return prompt && prompt.rl && prompt.rl.close();

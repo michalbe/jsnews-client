@@ -55,6 +55,7 @@ var renderPost = function (index, full) {
     } else {
         renderLikes();
         renderComments(commentsCount, currentPost.comments);
+        console.log('-------------------------\n'.main);
     }
 };
 
@@ -101,5 +102,8 @@ module.exports = {
     },
     getPostUrl: function(index){
         return data[index].actions[0].link;
+    },
+    getPost: function (index) {
+        return data[index];   
     }
 };
