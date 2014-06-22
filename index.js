@@ -11,7 +11,7 @@ var currentPost = null;
 var currentCache = null;
 var lastCreatedPost = null;
 var FB = null;
-var openingPost = false;
+var stopRender = false;
 var follows = [];
 
 var renderGroupMenu = function () {
@@ -53,7 +53,7 @@ var wallActions = function (answer) {
             renderGroupMenu();
             break;
         case 'open':
-            openingPost = true;
+            stopRender = true;
             nav.showMenu("Podaj numer postu do otwarcia (0-7)", openSinglePost, function (value) {
                 var number = parseInt(value, 10);
                 if (typeof number === 'number' && !Number.isNaN(number) && number < renderer.getNumberOfPosts()) {
@@ -64,7 +64,19 @@ var wallActions = function (answer) {
             });
             break;
         case 'followlist':
-            console.log(follows);
+            var choices = [];
+            
+            for (var i = 0, l = follows.length; i < l; i++) {
+                choices.push({
+                    name: follows[i].message.substr(0, 50).replace(/(?:\r\n|\r|\n)/g, ' ') + '...',
+                    value: i
+                });
+            }
+            stopRender = true;
+            nav.showCheckBoxes('Zaznacz posty do usunięcia z listy obserwowanych', choices, function (answer) {
+                renderWallMenu();
+            });
+            break;
         case 'close':
             process.exit();
             break;
@@ -74,10 +86,25 @@ var wallActions = function (answer) {
     }
 };
 
+var removeFollowPost = function (posts) {
+    if (answer.list.indexOf('all') > -1) {
+        follows = [];
+    } else {
+        for (var i = posts.length-1; i > -1; i--) {    
+            follows.splice(parseInt(posts[i], 10),1);
+        }
+    }
+    
+    stopRender = false;
+    
+    renderer.renderWall();
+    renderWallMenu();
+};
+
 var openSinglePost = function (answer) {
     var key = answer.value;
     
-    openingPost = false;
+    stopRender = false;
     currentPost = key;
     
     console.log(key);
@@ -158,10 +185,11 @@ var renderWall = function () {
         currentCache = JSON.stringify(data);
         checkLatestPost(data[0]);
         
-        if (openingPost || currentPost) return;
+        renderer.setData(data);
+        
+        if (stopRender || currentPost) return;
         
         renderer.clear();
-        renderer.setData(data);
         renderer.renderWall();
         renderWallMenu();
     });

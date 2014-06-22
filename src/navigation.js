@@ -18,6 +18,24 @@ var showGroupList = function(message, groups, cb) {
     });
 };
 
+var showCheckBoxes = function (message, choices, cb) {
+    closePrompt();
+    prompt = false;
+    
+    choices.push(new inquirer.Separator());
+    choices.push({name: 'Usuń wszystkie', value: 'all'});
+    choices.push({name: 'Wróć', value: 'back'});
+    
+    prompt = inquirer.prompt({
+        message: message,
+        type: 'checkbox',
+        name: 'list',
+        choices: choices,
+    }, function( answers ) {
+        cb(answers);
+    });
+};
+
 var showMenu = function(message, cb, validator) {
     closePrompt();
     
@@ -39,5 +57,6 @@ var closePrompt = function () {
 
 module.exports = {
     showGroupList: showGroupList,
+    showCheckBoxes: showCheckBoxes,
     showMenu: showMenu
 };
