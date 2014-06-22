@@ -1,3 +1,5 @@
+/*global require:false, console:false, module:false*/
+
 var inquirer = require('inquirer');
 
 var prompt;

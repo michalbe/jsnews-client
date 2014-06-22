@@ -1,3 +1,5 @@
+/*global require:false, console:false, module:false*/
+
 var config = require('./config');
 var FB = require('fb');
 
