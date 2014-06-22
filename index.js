@@ -1,3 +1,5 @@
+/*global require:false, console:false, module:false, setTimeout: false*/
+
 var data = require('./src/data');
 var renderer = require('./src/renderer');
 var nav = require('./src/navigation');
@@ -71,6 +73,8 @@ var postActions = function (answer) {
         case 'f':
             require('child_process').exec('open ' + renderer.getPostUrl(currentPost));
             renderer.renderPost(currentPost, true);
+            renderPostMenu();
+            break;
         default:
             renderPostMenu();
             break;
