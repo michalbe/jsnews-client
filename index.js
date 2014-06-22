@@ -45,7 +45,7 @@ var wallActions = function (answer) {
     
     if (typeof key === 'number' && !Number.isNaN(key) && key < renderer.getNumberOfPosts()) {
         currentPost = key;
-        renderer.post(key, true);
+        renderer.renderPost(key, true);
         showPostMenu();
     } else {
         renderWallMenu();  
@@ -57,16 +57,16 @@ var onePostAction = function(answer) {
   switch (answer) {
     case 'f':
       require('child_process').exec('open ' + renderer.getPostUrl(currentPost));
-      renderer.post(currentPost, true);
+      renderer.renderPost(currentPost, true);
       showPostMenu();
       break;
     case 'w':
       currentPost = null;
-      renderer.all();
+      renderer.renderWall();
       renderWallMenu();
       break;
     default:
-      renderer.post(currentPost, true);
+      renderer.renderPost(currentPost, true);
       showPostMenu();
   }
 };
@@ -93,7 +93,7 @@ var renderWall = function(){
     }
 
     renderer.setData(data);
-    renderer.all();
+    renderer.renderWall();
     renderWallMenu();
 
     // check for update every config.refreshTime
