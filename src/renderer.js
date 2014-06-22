@@ -53,20 +53,20 @@ var renderPost = function (index, full) {
     if (!full) {
         console.log('Lajki: '.main.bold + likesCount.toString().second + ' | Komentarze: '.main.bold + commentsCount.toString().second);
     } else {
-        renderLikes();
+        renderLikes(currentPost.likes);
         renderComments(commentsCount, currentPost.comments);
         console.log('-------------------------\n'.main);
     }
 };
 
-var renderLikes = function (currentPost) {
-    var likes = likes > 0 ?
-            likes.toString().second + ' [ '.main +
-            currentPost.likes.data.map(function(l) {
+var renderLikes = function (likes) {
+    var like = likes.data.length > 0 ?
+            likes.data.length.toString().second + ' [ '.main +
+            likes.data.map(function(l) {
                 return l.name;
             }).join(', ').second + ' ]'.main : 0;
     
-    console.log('Lajki: '.main.bold + likes);
+    console.log('Lajki: '.main.bold + like);
 };
 
 var renderComments = function(count, comments) {
