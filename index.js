@@ -68,7 +68,7 @@ var wallActions = function (answer) {
             
             for (var i = 0, l = follows.length; i < l; i++) {
                 choices.push({
-                    name: follows[i].message.substr(0, 50).replace(/(?:\r\n|\r|\n)/g, ' ') + '...',
+                    name: follows[i].message.substr(0, 100).replace(/(?:\r\n|\r|\n)/g, ' ') + '...',
                     value: i
                 });
             }
