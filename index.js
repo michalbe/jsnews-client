@@ -45,6 +45,8 @@ var renderWallMenu = function () {
 };
 
 var wallActions = function (answer) {
+  var postCount = renderer.getNumberOfPosts() - 1;
+  
   answer = answer.option.toLowerCase();
 
   switch(answer) {
@@ -54,13 +56,13 @@ var wallActions = function (answer) {
       break;
     case 'open':
       stopRender = true;
-      nav.showMenu("Podaj numer postu do otwarcia (0-7)", openSinglePost, function (value) {
+      nav.showMenu('Podaj numer postu do otwarcia (0-' + postCount +  ')', openSinglePost, function (value) {
         var number = parseInt(value, 10);
         if (typeof number === 'number' && !Number.isNaN(number) && number < renderer.getNumberOfPosts()) {
           return true;
         }
 
-        return "Musisz podać liczbę z przedziału od 0 do 7";
+        return 'Musisz podać liczbę z przedziału od 0 do ' + postCount;
       });
       break;
     case 'followlist':
