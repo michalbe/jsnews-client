@@ -110,8 +110,6 @@ var openSinglePost = function (answer) {
   stopRender = false;
   currentPost = key;
 
-  console.log(key);
-
   renderer.renderPost(key, true);
   renderPostMenu();
 };
@@ -181,11 +179,11 @@ var checkFollowPosts = function (post, id) {
   FB.getPost(post.id, function (err, data) {
     var followComCounts = post.comments ? post.comments.data.length : 0;
     var updatedComCounts = data.comments ? data.comments.data.length : 0;
-
+      
     if (followComCounts !== updatedComCounts) {
       notification(
         currentGroup.name,
-        post.from.name + ' skomentował(a) obserwowany post',
+        post.comments.data[followComCounts - 1].from.name + ' skomentował(a) obserwowany post',
         post.comments.data[followComCounts - 1].message.substr(0, 50) + '...'
       );
     }
@@ -196,25 +194,25 @@ var checkFollowPosts = function (post, id) {
 
 var renderWall = function () {
   FB.getWall(function (err, data) {
-      setTimeout(renderWall, config.refreshTime);
+    setTimeout(renderWall, config.refreshTime);
 
-      var dataString = JSON.stringify(data);
+    var dataString = JSON.stringify(data);
 
-      if (currentCache && currentCache === dataString) return;
+    if (currentCache && currentCache === dataString) return;
 
-      currentCache = JSON.stringify(data);
-      checkLatestPost(data[0]);
-      for (var i = 0, l = follows.length; i < l; i++) {
-        checkFollowPosts(follows[i], i);   
-      }
+    currentCache = JSON.stringify(data);
+    checkLatestPost(data[0]);
+    for (var i = 0, l = follows.length; i < l; i++) {
+      checkFollowPosts(follows[i], i);   
+    }
 
-      renderer.setData(data);
+    renderer.setData(data);
 
-      if (stopRender || currentPost) return;
+    if (stopRender || currentPost) return;
 
-      renderer.clear();
-      renderer.renderWall();
-      renderWallMenu();
+    renderer.clear();
+    renderer.renderWall();
+    renderWallMenu();
   });
 };
 

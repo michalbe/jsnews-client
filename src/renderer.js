@@ -60,7 +60,7 @@ var renderPost = function (index, full) {
 };
 
 var renderLikes = function (likes) {
-  var like = likes.data.length > 0 ?
+  var like = likes ?
       likes.data.length.toString().second + ' [ '.main +
       likes.data.map(function(l) {
         return l.name;
