@@ -169,9 +169,9 @@ var postActions = function (answer) {
 var checkLatestPost = function (post) {
   if (post.created_time === post.updated_time && lastCreatedPost !== post.id) {
     notification(
-      currentGroup.name
-      , post.from.name + ' dodał(a) nowy post'
-      , post.message && post.message.substr(0, 50) + '...'
+      currentGroup.name,
+      post.from.name + ' dodał(a) nowy post',
+      post.message && post.message.substr(0, 50) + '...'
     );
     lastCreatedPost = post.id;
   }
@@ -184,9 +184,9 @@ var checkFollowPosts = function (post, id) {
 
     if (followComCounts !== updatedComCounts) {
       notification(
-        currentGroup.name
-        , post.from.name + ' skomentował(a) obserwowany post'
-        , post.comments.data[followComCounts - 1].message.substr(0, 50) + '...'
+        currentGroup.name,
+        post.from.name + ' skomentował(a) obserwowany post',
+        post.comments.data[followComCounts - 1].message.substr(0, 50) + '...'
       );
     }
 
