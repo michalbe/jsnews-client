@@ -6,7 +6,7 @@ var nav = require('./src/navigation');
 var notification = require('./src/notification');
 var config = require('./src/config');
 
-var currentGroup = 0;
+var currentGroup = -1;
 var currentPost = null;
 var currentCache = null;
 var lastCreatedPost = null;
@@ -223,10 +223,14 @@ var renderSinglePost = function (id) {
 };
 
 var init = function () {
-    data(function (err, api) {
-        FB = api;
-        renderGroupMenu();
-    });
+    if (currentGroup > -1) {
+        renderWall();
+    } else {
+        data(function (err, api) {
+            FB = api;
+            renderGroupMenu();
+        });
+    }
 };
 
 init();
