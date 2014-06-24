@@ -1,5 +1,14 @@
-var growl = require('growl');
+/*global require:false, console:false, module:false*/
 
-module.exports = function() {
-  growl('Updacik na JS Newsuniu <3<3!', { title: 'JS News: client'})
+var Notification = require('node-notifier');
+var config = require('./config');
+
+var notifier = new Notification();
+
+module.exports = function(title, subtitle, message) {
+  notifier.notify({
+    title: title,
+    subtitle: subtitle,
+    message: message
+  });
 };

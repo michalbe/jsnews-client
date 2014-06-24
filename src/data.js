@@ -1,3 +1,5 @@
+/*global require:false, console:false, module:false*/
+
 var config = require('./config');
 var FB = require('fb');
 
@@ -12,14 +14,37 @@ module.exports = function(cb){
       return;
     }
 
+    var group = 0;
     var accessToken = res.access_token;
-    FB.api('/' + config.groups[0] + '/feed?limit=' + config.maxPosts + '&access_token='+accessToken, function (res) {
-      if(!res || res.error) {
+        
+    var setGroup = function (groupID) {
+      group = groupID;
+    };
+        
+    var getWall = function (callback) {
+      FB.api('/' + group + '/feed?limit=' + config.maxPosts + '&access_token='+accessToken, function (res) {
+        if(!res || res.error) {
           cb(!res ? 'error occurred' : res.error);
           return;
-      }
-      cb(null, res.data);
+        }
+        callback(null, res.data);
+      });
+    };
+        
+    var getPost = function (id, callback) {
+      FB.api(id + '?access_token='+accessToken, function (res) {
+        if(!res || res.error) {
+          cb(!res ? 'error occurred' : res.error);
+          return;
+        }
+        callback(null, res);
+      });
+    };
+        
+    cb(null, {
+      getWall: getWall,
+      getPost: getPost,
+      setGroup: setGroup
     });
-
   });
-}
+};
