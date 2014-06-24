@@ -179,7 +179,7 @@ var checkFollowPosts = function (post, id) {
   FB.getPost(post.id, function (err, data) {
     var followComCounts = post.comments ? post.comments.data.length : 0;
     var updatedComCounts = data.comments ? data.comments.data.length : 0;
-      
+
     if (followComCounts !== updatedComCounts) {
       notification(
         currentGroup.name,
