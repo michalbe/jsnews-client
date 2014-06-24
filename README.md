@@ -11,9 +11,9 @@ JS News: Client to oparty na node.js, commandlineowy klient do Waszej ulubionej 
 ### Co nowego? ###
 Changelog:
 
-  * v 1.1 - 24 czerwca 2014 [autor: [Michał Maćkowiak](https://github.com/chemikpil)]:
+  * v 1.1.0 (:elephant: _hannibal_) - 24 czerwca 2014, autor: [![chemikpil](https://avatars3.githubusercontent.com/u/548664?s=15) Michał Maćkowiak](https://github.com/chemikpil):
     * Możliwość przechodzenia pomiędzy grupami zdefiniowanymi w configu
-    * Moduł inputu zmienony z readLine na [inquire](https://www.npmjs.org/package/inquirer)
+    * Moduł inputu zmienony z readLIne na [inquire](https://www.npmjs.org/package/inquirer)
     * Growl zmieniony na [node-notifier](https://www.npmjs.org/package/node-notifier) (od OS X 10.8 notyfikacje systemowe + wsparcie dla Win i Linuxa)
     * Notyfikacja informuje tylko o nowych postach (nie o lajkach i komentarzach), [Issue #34](https://github.com/michalbe/jsnews-client/issues/34)
     * Możliwość obserwowania wybranych postów - dostają one notyfikacje o każdym lajku i komentarzu (uwaga na [Bug #33](https://github.com/michalbe/jsnews-client/issues/33))
