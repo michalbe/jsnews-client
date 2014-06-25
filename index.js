@@ -180,11 +180,11 @@ var checkFollowPosts = function (post, id) {
     var followComCounts = post.comments ? post.comments.data.length : 0;
     var updatedComCounts = data.comments ? data.comments.data.length : 0;
 
-    if (followComCounts !== updatedComCounts) {
+    if (followComCounts !== updatedComCounts && updatedComCounts > 0) {
       notification(
         currentGroup.name,
-        post.comments.data[followComCounts - 1].from.name + ' skomentował(a) obserwowany post',
-        post.comments.data[followComCounts - 1].message.substr(0, 50) + '...'
+        data.comments.data[updatedComCounts - 1].from.name + ' skomentował(a) obserwowany post',
+        data.comments.data[updatedComCounts - 1].message.substr(0, 50) + '...'
       );
     }
 
