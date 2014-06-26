@@ -1,3 +1,16 @@
+var defineWatchFlag = function (name, value) {
+  Object.defineProperty(module.exports.watchFlags, name, {
+    value:      value,
+    enumerable: true
+  });
+}
+
+var FLAG_WATCH_NONE = 0;
+var FLAG_WATCH_NEW_POSTS = 1;
+var FLAG_WATCH_NEW_POST_LIKES = 2;
+var FLAG_WATCH_NEW_COMMENTS = 4;
+var FLAG_WATCH_NEW_COMMENT_LIKES = 8;
+
 module.exports = {
   client_id: XXXXXXXXXXXXXXXXX,
   client_secret: XXXXXXXXXXXXX,
@@ -6,15 +19,18 @@ module.exports = {
   groups: [
     {
       name: 'JS News',
-      id: '217169631654737'
+      id: '217169631654737',
+      watchFlags: FLAG_WATCH_NEW_POSTS | FLAG_WATCH_NEW_POST_LIKES | FLAG_WATCH_NEW_COMMENTS
     },
     {
       name: 'JS News: After hours',
-      id: '257881290932879'
+      id: '257881290932879',
+      watchFlags: FLAG_WATCH_NONE
     },
     {
       name: 'JS News: Jobs',
-      id: '192228117567250'
+      id: '192228117567250',
+      watchFlags: FLAG_WATCH_NONE
     }
   ],
   theme: {
@@ -23,3 +39,10 @@ module.exports = {
     disable: 'grey'
   }
 };
+
+module.exports.watchFlags = {};
+defineWatchFlag('FLAG_WATCH_NONE', FLAG_WATCH_NONE);
+defineWatchFlag('FLAG_WATCH_NEW_POSTS', FLAG_WATCH_NEW_POSTS);
+defineWatchFlag('FLAG_WATCH_NEW_POST_LIKES', FLAG_WATCH_NEW_POST_LIKES);
+defineWatchFlag('FLAG_WATCH_NEW_COMMENTS', FLAG_WATCH_NEW_COMMENTS);
+defineWatchFlag('FLAG_WATCH_NEW_COMMENT_LIKES', FLAG_WATCH_NEW_COMMENT_LIKES);
