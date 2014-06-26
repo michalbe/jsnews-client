@@ -24,11 +24,13 @@ module.exports = {
     },
     {
       name: 'JS News: After hours',
-      id: '257881290932879'
+      id: '257881290932879',
+      watchFlags: FLAG_WATCH_NONE
     },
     {
       name: 'JS News: Jobs',
-      id: '192228117567250'
+      id: '192228117567250',
+      watchFlags: FLAG_WATCH_NONE
     }
   ],
   theme: {
