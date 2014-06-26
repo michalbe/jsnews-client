@@ -5,16 +5,15 @@ var renderer = require('./src/renderer');
 var nav = require('./src/navigation');
 var notification = require('./src/notification');
 var config = require('./src/config');
-var fs = require('fs');
 
 var currentGroup = -1;
 var currentPost = null;
-var currentCache = null;
 var groupCache = [];
 var groupLikeCache = [];
 var groupCommentCache = [];
 var postLikeCache = [];
 var postCommentCache = [];
+var postCommentLikeCache = [];
 var lastCreatedPosts = [];
 
 var FB = null;
@@ -52,7 +51,7 @@ var renderWallMenu = function () {
 
 var wallActions = function (answer) {
   var postCount = renderer.getNumberOfPosts() - 1;
-  
+
   answer = answer.option.toLowerCase();
 
   switch(answer) {
@@ -99,7 +98,7 @@ var removeFollowPost = function (answer) {
   if (option.indexOf('all') > -1) {
     follows = [];
   } else if (option.length && option.indexOf('back') === -1) {
-    for (var i = option.length-1; i > -1; i--) {    
+    for (var i = option.length-1; i > -1; i--) {
       follows.splice(parseInt(option[i], 10),1);
     }
   }
@@ -195,7 +194,7 @@ var checkFollowPosts = function (post, id) {
     }
 
     follows[id] = data;
-  }); 
+  });
 };
 
 var checkLikes = function (group, data) {
@@ -212,7 +211,9 @@ var checkLikes = function (group, data) {
 
   var likeDataString = JSON.stringify(postLikeData);
 
-  if (groupLikeCache && groupLikeCache[group.id] && groupLikeCache[group.id] === likeDataString) return;
+  if (groupLikeCache && groupLikeCache[group.id] && groupLikeCache[group.id] === likeDataString) {
+    return;
+  }
 
   for (var index in postLikeData) {
     var likeData = postLikeData[index];
@@ -229,12 +230,13 @@ var checkLikes = function (group, data) {
 
     }
     postLikeCache[index] = likeData;
-  };
-  groupLikeCache[group.id] == likeDataString;
+  }
+  groupLikeCache[group.id] = likeDataString;
 };
 
-var checkGroupComments = function (group, data) {
-  var postCommentData = {};
+var checkGroupCommentsAndLikes = function (group, data) {
+  var postCommentData = {},
+    commentsLikeData = {};
   data.forEach(function (post) {
     if(post.comments && post.comments.data)
     {
@@ -242,33 +244,60 @@ var checkGroupComments = function (group, data) {
         comments: post.comments.data,
         message: post.message.length > 50 ? post.message.substr(0, 50) + '...' : post.message
       };
+      if(group.watchFlags & config.watchFlags.FLAG_WATCH_NEW_COMMENT_LIKES) {
+        post.comments.data.forEach(function (comment) {
+          commentsLikeData[comment.id] = {
+            likes: comment.like_count,
+            message: comment.message.length > 50 ? comment.message.substr(0, 50) + '...' : comment.message
+          };
+        });
+      }
     }
   });
 
   var commentDataString = JSON.stringify(postCommentData);
+  var commentLikeDataString = JSON.stringify(commentsLikeData);
 
-  if (groupCommentCache && groupCommentCache[group.id] && groupCommentCache[group.id] === commentDataString) return;
-  logToFile('group comments change');
+  if (groupCommentCache && groupCommentCache[group.id] && groupCommentCache[group.id] === commentDataString) {
+    return;
+  }
 
   for (var index in postCommentData) {
     var commentData = postCommentData[index];
     if(!postCommentCache[index] || JSON.stringify(commentData) !== JSON.stringify(postCommentCache[index]))
     {
-      logToFile('post comments change');
       var cacheLength = postCommentCache[index] && postCommentCache[index].comments ? postCommentCache[index].comments.length : 0;
       var countNewComments = commentData.comments.length - cacheLength;
-      var strOthers = countNewComments > 1 ? ' i ' + (countNewComments - 1) + ' innych' : '';
-      var message = commentData.comments[0].message.length > 50 ? commentData.comments[0].message.substr(0, 50) + '...' : commentData.comments[0].message;
-      notification(
-        group.name,
-        commentData.comments[0].from.name + strOthers + ' skomentował post',
-        message
-      );
-
+      if(countNewComments > 0 && group.watchFlags & config.watchFlags.FLAG_WATCH_NEW_COMMENTS)
+      {
+        var strOthers = countNewComments > 1 ? ' i ' + (countNewComments - 1) + ' innych' : '';
+        var lastCommentIndex = commentData.comments.length - 1;
+        var message = commentData.comments[lastCommentIndex].message.length > 50 ? commentData.comments[lastCommentIndex].message.substr(0, 50) + '...' : commentData.comments[lastCommentIndex].message;
+        var title = commentData.comments[lastCommentIndex].from.name + strOthers + ' skomentował post: ' + commentData.message;
+        notification(
+          group.name,
+          title,
+          message
+        );
+      }
+      else if (countNewComments <= 0 && group.watchFlags & config.watchFlags.FLAG_WATCH_NEW_COMMENT_LIKES &&
+        postCommentLikeCache && postCommentLikeCache[group.id] && JSON.stringify(postCommentLikeCache[group.id]) !== commentLikeDataString) {
+        for (var commentId in commentsLikeData) {
+          var commentLikeData = commentsLikeData[commentId];
+          if(commentLikeData.likes > postCommentLikeCache[group.id][commentId].likes) {
+            notification(
+              group.name,
+              'Nowe polubienie komentarza',
+              commentLikeData.message
+            );
+          }
+        }
+      }
     }
     postCommentCache[index] = commentData;
-  };
-  groupCommentCache[group.id] == commentDataString;
+  }
+  groupCommentCache[group.id] = commentDataString;
+  postCommentLikeCache[group.id] = commentsLikeData;
 
 };
 
@@ -283,9 +312,9 @@ var checkForNotifications = function () {
 
         var dataString = JSON.stringify(data);
 
-        if (groupCache && groupCache[group.id] && groupCache[group.id] === dataString) return;
-
-        logToFile(dataString);
+        if (groupCache && groupCache[group.id] && groupCache[group.id] === dataString) {
+          return;
+        }
 
         groupCache[group.id] = JSON.stringify(data);
         if(group.watchFlags & config.watchFlags.FLAG_WATCH_NEW_POSTS) {
@@ -294,14 +323,14 @@ var checkForNotifications = function () {
         if(group.watchFlags & config.watchFlags.FLAG_WATCH_NEW_POST_LIKES) {
           checkLikes(group, data);
         }
-        if(group.watchFlags & config.watchFlags.FLAG_WATCH_NEW_COMMENTS) {
-          checkGroupComments(group, data);
+        if(group.watchFlags & config.watchFlags.FLAG_WATCH_NEW_COMMENTS || group.watchFlags & config.watchFlags.FLAG_WATCH_NEW_COMMENT_LIKES) {
+          checkGroupCommentsAndLikes(group, data);
         }
         for (var i = 0, l = follows.length; i < l; i++) {
-          checkFollowPosts(follows[i], i);   
+          checkFollowPosts(follows[i], i);
         }
       });
-      
+
     }
     catch (e) {
       console.log(e);
@@ -353,13 +382,3 @@ var init = function () {
 };
 
 init();
-
-var logToFile = function(data) {
-  if(typeof data !== 'string')
-    data = JSON.stringify(data);
-  fs.writeFile("./data.log", "\r\n\r\n" + data, {flag: 'a'}, function(err) {
-    if(err) {
-      console.log(err);
-    }
-  });
-}
