@@ -5,6 +5,7 @@ var renderer = require('./src/renderer');
 var nav = require('./src/navigation');
 var notification = require('./src/notification');
 var config = require('./src/config');
+var flags = require('./src/watchflags');
 
 var currentGroup = -1;
 var currentPost = null;
@@ -200,8 +201,7 @@ var checkFollowPosts = function (post, id) {
 var checkLikes = function (group, data) {
   var postLikeData = {};
   data.forEach(function (post) {
-    if(post.likes && post.likes.data)
-    {
+    if(post.likes && post.likes.data) {
       postLikeData[post.id] = {
         likes: post.likes.data,
         message: post.message.length > 50 ? post.message.substr(0, 50) + '...' : post.message
@@ -217,8 +217,7 @@ var checkLikes = function (group, data) {
 
   for (var index in postLikeData) {
     var likeData = postLikeData[index];
-    if(!postLikeCache[index] || JSON.stringify(likeData) !== JSON.stringify(postLikeCache[index]))
-    {
+    if(!postLikeCache[index] || JSON.stringify(likeData) !== JSON.stringify(postLikeCache[index])) {
       var cacheLength = postLikeCache[index] && postLikeCache[index].likes ? postLikeCache[index].likes.length : 0;
       var countNewLikes = likeData.likes.length - cacheLength;
       var strOthers = countNewLikes > 1 ? ' i ' + (countNewLikes - 1) + ' innych' : '';
@@ -238,13 +237,12 @@ var checkGroupCommentsAndLikes = function (group, data) {
   var postCommentData = {},
     commentsLikeData = {};
   data.forEach(function (post) {
-    if(post.comments && post.comments.data)
-    {
+    if(post.comments && post.comments.data) {
       postCommentData[post.id] = {
         comments: post.comments.data,
         message: post.message.length > 50 ? post.message.substr(0, 50) + '...' : post.message
       };
-      if(group.watchFlags & config.watchFlags.FLAG_WATCH_NEW_COMMENT_LIKES) {
+      if(group.watchFlags & flags.FLAG_WATCH_NEW_COMMENT_LIKES) {
         post.comments.data.forEach(function (comment) {
           commentsLikeData[comment.id] = {
             likes: comment.like_count,
@@ -264,12 +262,10 @@ var checkGroupCommentsAndLikes = function (group, data) {
 
   for (var index in postCommentData) {
     var commentData = postCommentData[index];
-    if(!postCommentCache[index] || JSON.stringify(commentData) !== JSON.stringify(postCommentCache[index]))
-    {
+    if(!postCommentCache[index] || JSON.stringify(commentData) !== JSON.stringify(postCommentCache[index])) {
       var cacheLength = postCommentCache[index] && postCommentCache[index].comments ? postCommentCache[index].comments.length : 0;
       var countNewComments = commentData.comments.length - cacheLength;
-      if(countNewComments > 0 && group.watchFlags & config.watchFlags.FLAG_WATCH_NEW_COMMENTS)
-      {
+      if(countNewComments > 0 && group.watchFlags & flags.FLAG_WATCH_NEW_COMMENTS) {
         var strOthers = countNewComments > 1 ? ' i ' + (countNewComments - 1) + ' innych' : '';
         var lastCommentIndex = commentData.comments.length - 1;
         var message = commentData.comments[lastCommentIndex].message.length > 50 ? commentData.comments[lastCommentIndex].message.substr(0, 50) + '...' : commentData.comments[lastCommentIndex].message;
@@ -279,8 +275,7 @@ var checkGroupCommentsAndLikes = function (group, data) {
           title,
           message
         );
-      }
-      else if (countNewComments <= 0 && group.watchFlags & config.watchFlags.FLAG_WATCH_NEW_COMMENT_LIKES &&
+      } else if (countNewComments <= 0 && group.watchFlags & flags.FLAG_WATCH_NEW_COMMENT_LIKES &&
         postCommentLikeCache && postCommentLikeCache[group.id] && JSON.stringify(postCommentLikeCache[group.id]) !== commentLikeDataString) {
         for (var commentId in commentsLikeData) {
           var commentLikeData = commentsLikeData[commentId];
@@ -317,13 +312,13 @@ var checkForNotifications = function () {
         }
 
         groupCache[group.id] = JSON.stringify(data);
-        if(group.watchFlags & config.watchFlags.FLAG_WATCH_NEW_POSTS) {
+        if(group.watchFlags & flags.FLAG_WATCH_NEW_POSTS) {
           checkLatestPost(group, data[0]);
         }
-        if(group.watchFlags & config.watchFlags.FLAG_WATCH_NEW_POST_LIKES) {
+        if(group.watchFlags & flags.FLAG_WATCH_NEW_POST_LIKES) {
           checkLikes(group, data);
         }
-        if(group.watchFlags & config.watchFlags.FLAG_WATCH_NEW_COMMENTS || group.watchFlags & config.watchFlags.FLAG_WATCH_NEW_COMMENT_LIKES) {
+        if(group.watchFlags & flags.FLAG_WATCH_NEW_COMMENTS || group.watchFlags & flags.FLAG_WATCH_NEW_COMMENT_LIKES) {
           checkGroupCommentsAndLikes(group, data);
         }
         for (var i = 0, l = follows.length; i < l; i++) {
@@ -368,13 +363,11 @@ var init = function () {
       FB = api;
       renderGroupMenu();
       config.groups.forEach(function(group, index) {
-        if(group.watchFlags !== undefined && group.watchFlags !== config.watchFlags.FLAG_WATCH_NONE)
-        {
+        if(group.watchFlags !== undefined && group.watchFlags !== flags.FLAG_WATCH_NONE) {
           notifyGroups.push(group);
         }
       });
-      if(notifyGroups.length > 0)
-      {
+      if(notifyGroups.length > 0) {
         checkForNotifications();
       }
     });

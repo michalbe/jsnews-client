@@ -1,15 +1,4 @@
-var defineWatchFlag = function (name, value) {
-  Object.defineProperty(module.exports.watchFlags, name, {
-    value:      value,
-    enumerable: true
-  });
-}
-
-var FLAG_WATCH_NONE = 0;
-var FLAG_WATCH_NEW_POSTS = 1;
-var FLAG_WATCH_NEW_POST_LIKES = 2;
-var FLAG_WATCH_NEW_COMMENTS = 4;
-var FLAG_WATCH_NEW_COMMENT_LIKES = 8;
+var flags = require('./watchflags');
 
 module.exports = {
   client_id: XXXXXXXXXXXXXXXXX,
@@ -20,17 +9,17 @@ module.exports = {
     {
       name: 'JS News',
       id: '217169631654737',
-      watchFlags: FLAG_WATCH_NEW_POSTS | FLAG_WATCH_NEW_POST_LIKES | FLAG_WATCH_NEW_COMMENTS
+      watchFlags: flags.FLAG_WATCH_NEW_POSTS | flags.FLAG_WATCH_NEW_POST_LIKES | flags.FLAG_WATCH_NEW_COMMENTS | flags.FLAG_WATCH_NEW_COMMENT_LIKES
     },
     {
       name: 'JS News: After hours',
       id: '257881290932879',
-      watchFlags: FLAG_WATCH_NONE
+      watchFlags: flags.FLAG_WATCH_NONE
     },
     {
       name: 'JS News: Jobs',
-      id: '192228117567250',
-      watchFlags: FLAG_WATCH_NONE
+      id: '192228117567250'
+      // brak ustawienia watchFlags daje ten sam efekt co flags.FLAG_WATCH_NONE
     }
   ],
   theme: {
@@ -39,10 +28,3 @@ module.exports = {
     disable: 'grey'
   }
 };
-
-module.exports.watchFlags = {};
-defineWatchFlag('FLAG_WATCH_NONE', FLAG_WATCH_NONE);
-defineWatchFlag('FLAG_WATCH_NEW_POSTS', FLAG_WATCH_NEW_POSTS);
-defineWatchFlag('FLAG_WATCH_NEW_POST_LIKES', FLAG_WATCH_NEW_POST_LIKES);
-defineWatchFlag('FLAG_WATCH_NEW_COMMENTS', FLAG_WATCH_NEW_COMMENTS);
-defineWatchFlag('FLAG_WATCH_NEW_COMMENT_LIKES', FLAG_WATCH_NEW_COMMENT_LIKES);
