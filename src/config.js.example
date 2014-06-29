@@ -1,3 +1,5 @@
+var flags = require('./watchflags');
+
 module.exports = {
   client_id: XXXXXXXXXXXXXXXXX,
   client_secret: XXXXXXXXXXXXX,
@@ -6,15 +8,18 @@ module.exports = {
   groups: [
     {
       name: 'JS News',
-      id: '217169631654737'
+      id: '217169631654737',
+      watchFlags: flags.FLAG_WATCH_NEW_POSTS | flags.FLAG_WATCH_NEW_POST_LIKES | flags.FLAG_WATCH_NEW_COMMENTS | flags.FLAG_WATCH_NEW_COMMENT_LIKES
     },
     {
       name: 'JS News: After hours',
-      id: '257881290932879'
+      id: '257881290932879',
+      watchFlags: flags.FLAG_WATCH_NONE
     },
     {
       name: 'JS News: Jobs',
       id: '192228117567250'
+      // brak ustawienia watchFlags daje ten sam efekt co flags.FLAG_WATCH_NONE
     }
   ],
   theme: {
