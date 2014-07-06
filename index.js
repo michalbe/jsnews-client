@@ -1,8 +1,5 @@
 'use strict';
 
-/* global require */
-/* global process */
-
 var data = require('./src/data');
 var renderer = require('./src/renderer');
 var nav = require('./src/navigation');
