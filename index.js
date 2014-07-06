@@ -1,4 +1,7 @@
-/*global require:false, console:false, module:false, setTimeout: false, process: false*/
+'use strict';
+
+/* global require */
+/* global process */
 
 var data = require('./src/data');
 var renderer = require('./src/renderer');
@@ -47,7 +50,7 @@ var renderWallMenu = function () {
     {name: 'Zamknij  aplikacje', value: 'close'}
   ];
 
-  nav.showGroupList("Menu", options, wallActions);
+  nav.showGroupList('Menu', options, wallActions);
 };
 
 var wallActions = function (answer) {
@@ -62,28 +65,41 @@ var wallActions = function (answer) {
       break;
     case 'open':
       stopRender = true;
-      nav.showMenu('Podaj numer postu do otwarcia (0-' + postCount +  ')', openSinglePost, function (value) {
-        var number = parseInt(value, 10);
-        if (typeof number === 'number' && !Number.isNaN(number) && number < renderer.getNumberOfPosts()) {
-          return true;
-        }
+      nav.showMenu(
+        'Podaj numer postu do otwarcia (0-' + postCount +  ')',
+        openSinglePost,
+        function (value) {
+          var number = parseInt(value, 10);
+          if (
+            typeof number === 'number' &&
+            !Number.isNaN(number) &&
+            number < renderer.getNumberOfPosts()
+          ) {
+            return true;
+          }
 
-        return 'Musisz podać liczbę z przedziału od 0 do ' + postCount;
-      });
+          return 'Musisz podać liczbę z przedziału od 0 do ' + postCount;
+        }
+      );
       break;
     case 'followlist':
       var choices = [];
 
       for (var i = 0, l = follows.length; i < l; i++) {
         choices.push({
-          name: follows[i].message.substr(0, 100).replace(/(?:\r\n|\r|\n)/g, ' ') + '...',
+          name: follows[i].message.substr(0, 100)
+                .replace(/(?:\r\n|\r|\n)/g, ' ') + '...',
           value: i
         });
       }
       stopRender = true;
-      nav.showCheckBoxes('Zaznacz posty do usunięcia z listy obserwowanych', choices, function (answer) {
-        removeFollowPost(answer);
-      });
+      nav.showCheckBoxes(
+        'Zaznacz posty do usunięcia z listy obserwowanych',
+        choices,
+        function (answer) {
+          removeFollowPost(answer);
+        }
+      );
       break;
     case 'close':
       process.exit();
@@ -137,7 +153,7 @@ var renderPostMenu = function () {
     {name: 'Wróć do listy postów', value: 'back'}
   ];
 
-  nav.showGroupList("Menu", options, postActions);
+  nav.showGroupList('Menu', options, postActions);
 };
 
 var postActions = function (answer) {
@@ -171,7 +187,10 @@ var postActions = function (answer) {
 };
 
 var checkLatestPost = function (group, post) {
-  if (post.created_time === post.updated_time && lastCreatedPosts[group.id] !== post.id) {
+  if (
+    post.created_time === post.updated_time &&
+    lastCreatedPosts[group.id] !== post.id
+  ) {
     notification(
       group.name,
       post.from.name + ' dodał(a) nowy post',
@@ -189,7 +208,8 @@ var checkFollowPosts = function (post, id) {
     if (followComCounts !== updatedComCounts && updatedComCounts > 0) {
       notification(
         currentGroup.name,
-        data.comments.data[updatedComCounts - 1].from.name + ' skomentował(a) obserwowany post',
+        data.comments.data[updatedComCounts - 1].from.name +
+          ' skomentował(a) obserwowany post',
         data.comments.data[updatedComCounts - 1].message.substr(0, 50) + '...'
       );
     }
@@ -204,23 +224,35 @@ var checkLikes = function (group, data) {
     if(post.likes && post.likes.data) {
       postLikeData[post.id] = {
         likes: post.likes.data,
-        message: post.message.length > 50 ? post.message.substr(0, 50) + '...' : post.message
+        message: post.message.length > 50 ?
+          post.message.substr(0, 50) + '...' :
+          post.message
       };
     }
   });
 
   var likeDataString = JSON.stringify(postLikeData);
 
-  if (groupLikeCache && groupLikeCache[group.id] && groupLikeCache[group.id] === likeDataString) {
+  if (
+    groupLikeCache &&
+    groupLikeCache[group.id] &&
+    groupLikeCache[group.id] === likeDataString
+  ) {
     return;
   }
 
   for (var index in postLikeData) {
     var likeData = postLikeData[index];
-    if(!postLikeCache[index] || JSON.stringify(likeData) !== JSON.stringify(postLikeCache[index])) {
-      var cacheLength = postLikeCache[index] && postLikeCache[index].likes ? postLikeCache[index].likes.length : 0;
+    if(
+      !postLikeCache[index] ||
+      JSON.stringify(likeData) !== JSON.stringify(postLikeCache[index])
+    ) {
+      var cacheLength = postLikeCache[index] && postLikeCache[index].likes ?
+                        postLikeCache[index].likes.length : 0;
       var countNewLikes = likeData.likes.length - cacheLength;
-      var strOthers = countNewLikes > 1 ? ' i ' + (countNewLikes - 1) + ' innych' : '';
+      var strOthers = countNewLikes > 1 ?
+                      ' i ' + (countNewLikes - 1) + ' innych' :
+                      '';
       notification(
         group.name,
         likeData.likes[0].name + strOthers + ' lubi post',
@@ -240,13 +272,17 @@ var checkGroupCommentsAndLikes = function (group, data) {
     if(post.comments && post.comments.data) {
       postCommentData[post.id] = {
         comments: post.comments.data,
-        message: post.message.length > 50 ? post.message.substr(0, 50) + '...' : post.message
+        message: post.message.length > 50 ?
+                 post.message.substr(0, 50) + '...' :
+                 post.message
       };
       if(group.watchFlags & flags.FLAG_WATCH_NEW_COMMENT_LIKES) {
         post.comments.data.forEach(function (comment) {
           commentsLikeData[comment.id] = {
             likes: comment.like_count,
-            message: comment.message.length > 50 ? comment.message.substr(0, 50) + '...' : comment.message
+            message: comment.message.length > 50 ?
+                    comment.message.substr(0, 50) + '...' :
+                    comment.message
           };
         });
       }
@@ -256,30 +292,58 @@ var checkGroupCommentsAndLikes = function (group, data) {
   var commentDataString = JSON.stringify(postCommentData);
   var commentLikeDataString = JSON.stringify(commentsLikeData);
 
-  if (groupCommentCache && groupCommentCache[group.id] && groupCommentCache[group.id] === commentDataString) {
+  if (
+    groupCommentCache &&
+    groupCommentCache[group.id] &&
+    groupCommentCache[group.id] === commentDataString
+  ) {
     return;
   }
 
   for (var index in postCommentData) {
     var commentData = postCommentData[index];
-    if(!postCommentCache[index] || JSON.stringify(commentData) !== JSON.stringify(postCommentCache[index])) {
-      var cacheLength = postCommentCache[index] && postCommentCache[index].comments ? postCommentCache[index].comments.length : 0;
+    if(
+      !postCommentCache[index] ||
+      JSON.stringify(commentData) !== JSON.stringify(postCommentCache[index])
+    ) {
+      var cacheLength = postCommentCache[index] &&
+                        postCommentCache[index].comments ?
+                          postCommentCache[index].comments.length :
+                          0;
+
       var countNewComments = commentData.comments.length - cacheLength;
-      if(countNewComments > 0 && group.watchFlags & flags.FLAG_WATCH_NEW_COMMENTS) {
-        var strOthers = countNewComments > 1 ? ' i ' + (countNewComments - 1) + ' innych' : '';
+      if (
+        countNewComments > 0 &&
+        group.watchFlags & flags.FLAG_WATCH_NEW_COMMENTS
+      ) {
+        var strOthers = countNewComments > 1 ?
+                        ' i ' + (countNewComments - 1) + ' innych' :
+                        '';
         var lastCommentIndex = commentData.comments.length - 1;
-        var message = commentData.comments[lastCommentIndex].message.length > 50 ? commentData.comments[lastCommentIndex].message.substr(0, 50) + '...' : commentData.comments[lastCommentIndex].message;
-        var title = commentData.comments[lastCommentIndex].from.name + strOthers + ' skomentował post: ' + commentData.message;
+        var message =
+          commentData.comments[lastCommentIndex].message.length > 50 ?
+          commentData.comments[lastCommentIndex].message.substr(0, 50) + '...' :
+          commentData.comments[lastCommentIndex].message;
+        var title = commentData.comments[lastCommentIndex].from.name +
+                    strOthers + ' skomentował post: ' + commentData.message;
         notification(
           group.name,
           title,
           message
         );
-      } else if (countNewComments <= 0 && group.watchFlags & flags.FLAG_WATCH_NEW_COMMENT_LIKES &&
-        postCommentLikeCache && postCommentLikeCache[group.id] && JSON.stringify(postCommentLikeCache[group.id]) !== commentLikeDataString) {
+      } else if (
+        countNewComments <= 0 &&
+        group.watchFlags & flags.FLAG_WATCH_NEW_COMMENT_LIKES &&
+        postCommentLikeCache &&
+        postCommentLikeCache[group.id] &&
+        JSON.stringify(postCommentLikeCache[group.id]) !== commentLikeDataString
+      ) {
         for (var commentId in commentsLikeData) {
           var commentLikeData = commentsLikeData[commentId];
-          if(commentLikeData.likes > postCommentLikeCache[group.id][commentId].likes) {
+          if(
+            commentLikeData.likes >
+            postCommentLikeCache[group.id][commentId].likes
+          ) {
             notification(
               group.name,
               'Nowe polubienie komentarza',
@@ -307,7 +371,11 @@ var checkForNotifications = function () {
 
         var dataString = JSON.stringify(data);
 
-        if (groupCache && groupCache[group.id] && groupCache[group.id] === dataString) {
+        if (
+          groupCache &&
+          groupCache[group.id] &&
+          groupCache[group.id] === dataString
+        ) {
           return;
         }
 
@@ -318,7 +386,10 @@ var checkForNotifications = function () {
         if(group.watchFlags & flags.FLAG_WATCH_NEW_POST_LIKES) {
           checkLikes(group, data);
         }
-        if(group.watchFlags & flags.FLAG_WATCH_NEW_COMMENTS || group.watchFlags & flags.FLAG_WATCH_NEW_COMMENT_LIKES) {
+        if(
+          group.watchFlags & flags.FLAG_WATCH_NEW_COMMENTS ||
+          group.watchFlags & flags.FLAG_WATCH_NEW_COMMENT_LIKES
+        ) {
           checkGroupCommentsAndLikes(group, data);
         }
         for (var i = 0, l = follows.length; i < l; i++) {
@@ -341,18 +412,14 @@ var renderWall = function () {
 
     renderer.setData(data);
 
-    if (stopRender || currentPost) return;
+    if (stopRender || currentPost) {
+      return;
+    }
 
     renderer.clear();
     renderer.renderWall();
     renderWallMenu();
   });
-};
-
-var renderSinglePost = function (id) {
-  currentPost = id;
-  renderer.renderPost(id, true);
-  renderPostMenu();
 };
 
 var init = function () {
@@ -363,7 +430,10 @@ var init = function () {
       FB = api;
       renderGroupMenu();
       config.groups.forEach(function(group, index) {
-        if(group.watchFlags !== undefined && group.watchFlags !== flags.FLAG_WATCH_NONE) {
+        if(
+          group.watchFlags !== undefined &&
+          group.watchFlags !== flags.FLAG_WATCH_NONE
+        ) {
           notifyGroups.push(group);
         }
       });

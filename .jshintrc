@@ -2,7 +2,7 @@
   "camelcase": false,
   "curly": true,
   "forin": false,
-  "latedef": "nofunc",
+  "latedef": false,
   "newcap": false,
   "noarg": true,
   "nonew": true,
