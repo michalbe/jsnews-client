@@ -1,7 +1,6 @@
-/*global require:false, console:false, module:false*/
+'use strict';
 
 var Notification = require('node-notifier');
-var config = require('./config');
 
 var notifier = new Notification();
 
