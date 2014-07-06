@@ -1,4 +1,4 @@
-/*global require:false, console:false, module:false*/
+'use strict';
 
 var config = require('./config');
 var FB = require('fb');
@@ -15,9 +15,13 @@ module.exports = function(cb){
     }
 
     var accessToken = res.access_token;
-        
+
     var getWall = function (group, callback) {
-      FB.api('/' + group + '/feed?limit=' + config.maxPosts + '&access_token='+accessToken, function (res) {
+      FB.api(
+        '/' + group +
+        '/feed?limit=' + config.maxPosts +
+        '&access_token='+accessToken,
+        function (res) {
         if(!res || res.error) {
           cb(!res ? 'error occurred' : res.error);
           return;
@@ -25,7 +29,7 @@ module.exports = function(cb){
         callback(null, res.data);
       });
     };
-        
+
     var getPost = function (id, callback) {
       FB.api(id + '?access_token='+accessToken, function (res) {
         if(!res || res.error) {
@@ -35,7 +39,7 @@ module.exports = function(cb){
         callback(null, res);
       });
     };
-        
+
     cb(null, {
       getWall: getWall,
       getPost: getPost,
