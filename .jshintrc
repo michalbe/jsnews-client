@@ -23,7 +23,7 @@
   "laxcomma": true,
   "proto": true,
 
-  "browser": true,
+  "node": true,
   "devel": true,
   "nonstandard": true,
   "worker": true
