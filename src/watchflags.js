@@ -1,3 +1,5 @@
+'use strict';
+
 var defineWatchFlag = function (name, value) {
   Object.defineProperty(module.exports, name, {
     value:      value,
