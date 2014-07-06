@@ -1,19 +1,19 @@
-/*global require:false, console:false, module:false*/
+'use strict';
 
 var inquirer = require('inquirer');
 
-var prompt;
+var inquirerPrompt;
 
 var showGroupList = function(message, groups, cb) {
   closePrompt();
-  
-  prompt = inquirer.prompt({
+
+  inquirerPrompt = inquirer.prompt({
     message: message,
     type: 'list',
     name: 'option',
     choices: groups
   }, function (answer) {
-    cb(answer); 
+    cb(answer);
   });
 };
 
@@ -23,8 +23,8 @@ var showCheckBoxes = function (message, choices, cb) {
   choices.push(new inquirer.Separator());
   choices.push({name: 'Usuń wszystkie', value: 'all'});
   choices.push({name: 'Wróć', value: 'back'});
-  
-  prompt = inquirer.prompt({
+
+  inquirerPrompt = inquirer.prompt({
     message: message,
     type: 'checkbox',
     name: 'list',
@@ -36,8 +36,8 @@ var showCheckBoxes = function (message, choices, cb) {
 
 var showMenu = function(message, cb, validator) {
   closePrompt();
-  
-  prompt = inquirer.prompt({
+
+  inquirerPrompt = inquirer.prompt({
     message: message,
     type: 'input',
     name: 'value',
@@ -50,8 +50,7 @@ var showMenu = function(message, cb, validator) {
 
 
 var closePrompt = function () {
-  return prompt && prompt.rl && prompt.rl.close();
-  prompt = false;
+  return inquirerPrompt && inquirerPrompt.rl && inquirerPrompt.rl.close();
 };
 
 module.exports = {
