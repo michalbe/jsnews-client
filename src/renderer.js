@@ -1,4 +1,4 @@
-/*global require:false, console:false, module:false*/
+'use strict';
 
 var colors = require('colors');
 var config = require('./config');
@@ -14,7 +14,7 @@ var setData = function(d) {
 };
 
 var clearScreen = function(){
-  console.log("\u001b[2J\u001b[0;0H");
+  console.log('\u001b[2J\u001b[0;0H');
 };
 
 var renderNumberOfPosts = function() {
@@ -25,11 +25,11 @@ var renderNumberOfPosts = function() {
 var renderWall = function () {
   clearScreen();
   renderNumberOfPosts();
-  
+
   for (var i = 0; i < postsCount; i++) {
     renderPost(i);
   }
-  
+
   console.log('\n-------------------------\n'.main);
 };
 
@@ -37,21 +37,28 @@ var renderPost = function (index, full) {
   var currentPost = data[index];
   var content = currentPost.message || '';
   var likesCount = currentPost.likes ? currentPost.likes.data.length : 0;
-  var commentsCount = currentPost.comments ? currentPost.comments.data.length : 0;
-  var likes;
-  
+  var commentsCount =
+    currentPost.comments ?
+    currentPost.comments.data.length :
+    0;
+
   content = full ? content : content.substr(0, 150) + '...';
-  
-  if (full) clearScreen();
-  
-  console.log("\n");
+
+  if (full) {
+    clearScreen();
+  }
+
+  console.log('\n');
   console.log('-------------------------'.main);
   console.log('numer postu: '.main + index.toString().main);
   console.log('Autor: '.main.bold, currentPost.from.name.second);
   console.log('Treść: '.main.bold + content.second);
-  
+
   if (!full) {
-    console.log('Lajki: '.main.bold + likesCount.toString().second + ' | Komentarze: '.main.bold + commentsCount.toString().second);
+    console.log(
+      'Lajki: '.main.bold + likesCount.toString().second +
+      ' | Komentarze: '.main.bold + commentsCount.toString().second
+    );
   } else {
     renderLikes(currentPost.likes);
     renderComments(commentsCount, currentPost.comments);
@@ -65,7 +72,7 @@ var renderLikes = function (likes) {
       likes.data.map(function(l) {
         return l.name;
       }).join(', ').second + ' ]'.main : 0;
-  
+
   console.log('Lajki: '.main.bold + like);
 };
 
@@ -104,6 +111,6 @@ module.exports = {
     return data[index].actions[0].link;
   },
   getPost: function (index) {
-    return data[index];   
+    return data[index];
   }
 };
