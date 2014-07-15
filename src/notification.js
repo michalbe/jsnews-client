@@ -8,6 +8,6 @@ module.exports = function(title, subtitle, message) {
   notifier.notify({
     title: title,
     subtitle: subtitle,
-    message: message
+    message: message,
   });
 };
