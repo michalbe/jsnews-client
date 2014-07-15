@@ -2,7 +2,7 @@
 <showFavorites 'Zobacz listę postów obserwowanych'>
 <closeApp 'Zamknij  aplikacje'>
 <chooseGroup 'Wybierz grupę'>
-<postNumber 'Podaj numer postu do otwarcia (0-'>
+<openPostNumber 'Podaj numer postu do otwarcia'>
 <numerLimit 'Musisz podać liczbę z przedziału od 0 do'>
 <selectPostToDelete 'Zaznacz posty do usunięcia z listy obserwowanych'>
 <followPost 'Obserwuj post'>
@@ -17,11 +17,11 @@
 <commentedPost 'skomentował post:'>
 <newLikedComment 'Nowe polubienie komentarza'>
 <quantityPosts 'Ilość postów:'>
-<numberPost 'numer postu: '>
+<numberPost 'Numer postu '>
 <author 'Autor:'>
-<contents 'Treść:'>
+<content 'Treść:'>
 <likes 'Lajki:'>
 <comments 'Komentarze: '>
-<lack 'brak...'>
+<none 'brak...'>
 <deleteAll 'Usuń wszystkie'>
 <back 'Wróć'>

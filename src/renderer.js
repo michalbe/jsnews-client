@@ -51,14 +51,14 @@ var renderPost = function (index, full) {
 
   console.log('\n');
   console.log('-------------------------'.main);
-  console.log( _('postNumber').main + index.toString().main);
-  console.log( _('author ').main.bold, currentPost.from.name.second);
-  console.log( _('contents ').main.bold + content.second);
+  console.log( _('numberPost').main + ': ' + index.toString().main);
+  console.log( _('author').main.bold, currentPost.from.name.second);
+  console.log( _('content').main.bold + ' ' + content.second);
 
   if (!full) {
     console.log(
-      _('likes').main.bold + likesCount.toString().second + '| ' +
-      _('comments ').main.bold + commentsCount.toString().second
+      _('likes').main.bold + ' ' + likesCount.toString().second + ' | ' +
+      _('comments').main.bold + commentsCount.toString().second
     );
   } else {
     renderLikes(currentPost.likes);
@@ -74,18 +74,18 @@ var renderLikes = function (likes) {
         return l.name;
       }).join(', ').second + ' ]'.main : 0;
 
-  console.log( _('likes').main.bold + like);
+  console.log( _('likes').main.bold + ' ' + like);
 };
 
 var renderComments = function(count, comments) {
 
-  console.log( _('\n' + 'comments' + '\n').main.bold);
+  console.log('\n' + _('comments').main.bold + '\n');
   if (count > 0) {
     for (var i = 0; i < count; i++) {
       renderComment(comments.data[i]);
     }
   } else {
-    console.log( _('lack').disable.italic);
+    console.log( _('none').disable.italic);
   }
 };
 
@@ -97,7 +97,7 @@ var renderComment = function (comment) {
 
   console.log(date + '\n' + author);
   console.log(msg);
-  console.log( _('likes ').magenta + likes + '\n');
+  console.log( _('likes').magenta + ' ' + likes + '\n');
 };
 
 module.exports = {
