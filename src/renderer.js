@@ -57,7 +57,7 @@ var renderPost = function (index, full) {
 
   if (!full) {
     console.log(
-      _('likes').main.bold + likesCount.toString().second + '| '
+      _('likes').main.bold + likesCount.toString().second + '| ' +
       _('comments ').main.bold + commentsCount.toString().second
     );
   } else {
