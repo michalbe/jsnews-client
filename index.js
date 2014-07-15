@@ -44,7 +44,7 @@ var renderWallMenu = function () {
   var options = [
     {name: _('openPost'), value: 'open'},
     {name: _('showFavorites'), value: 'followlist'},
-    {name: _('chooseAgainGroup'), value: 'groups'},
+    {name: _('chooseGroup'), value: 'groups'},
     {name: _('closeApp'), value: 'close'}
   ];
 
@@ -64,7 +64,7 @@ var wallActions = function (answer) {
     case 'open':
       stopRender = true;
       nav.showMenu(
-        _('numberPost') + postCount +  ')',
+        _('postNumber') + postCount +  ')',
         openSinglePost,
         function (value) {
           var number = parseInt(value, 10);
@@ -92,7 +92,7 @@ var wallActions = function (answer) {
       }
       stopRender = true;
       nav.showCheckBoxes(
-        _('selectDeletePost'),
+        _('selectPostToDelete'),
         choices,
         function (answer) {
           removeFollowPost(answer);
@@ -146,7 +146,7 @@ var renderPostMenu = function () {
   }
 
   var options = [
-    {name: _('seePost'), value: 'browser'},
+    {name: _('openPost'), value: 'browser'},
     {name: followMsg, value: followValue},
     {name: _('backList'), value: 'back'}
   ];
@@ -207,7 +207,7 @@ var checkFollowPosts = function (post, id) {
       notification(
         currentGroup.name,
         data.comments.data[updatedComCounts - 1].from.name +
-          _(' commentedFollowPost'),
+          _(' commentedFollowedPost'),
         data.comments.data[updatedComCounts - 1].message.substr(0, 50) + '...'
       );
     }
@@ -249,7 +249,7 @@ var checkLikes = function (group, data) {
                         postLikeCache[index].likes.length : 0;
       var countNewLikes = likeData.likes.length - cacheLength;
       var strOthers = countNewLikes > 1 ?
-                      ' i ' + (countNewLikes - 1) + _(' other') :
+                      ' i ' + (countNewLikes - 1) + ' ' + _('others') :
                       '';
       notification(
         group.name,
@@ -315,7 +315,7 @@ var checkGroupCommentsAndLikes = function (group, data) {
         group.watchFlags & flags.FLAG_WATCH_NEW_COMMENTS
       ) {
         var strOthers = countNewComments > 1 ?
-                        ' i ' + (countNewComments - 1) + _(' other') :
+                        ' i ' + (countNewComments - 1) + ' ' + _('others') :
                         '';
         var lastCommentIndex = commentData.comments.length - 1;
         var message =
