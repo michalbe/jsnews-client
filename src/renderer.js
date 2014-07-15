@@ -2,6 +2,7 @@
 
 var colors = require('colors');
 var config = require('./config');
+var _ = require('./localization');
 
 var data;
 var postsCount = 0;
@@ -18,7 +19,7 @@ var clearScreen = function(){
 };
 
 var renderNumberOfPosts = function() {
-  var posts = 'Ilość postów: '.main.bold + postsCount.toString().second;
+  var posts = _('quantityPosts').main.bold + postsCount.toString().second;
   console.log(posts);
 };
 
@@ -50,14 +51,14 @@ var renderPost = function (index, full) {
 
   console.log('\n');
   console.log('-------------------------'.main);
-  console.log('numer postu: '.main + index.toString().main);
-  console.log('Autor: '.main.bold, currentPost.from.name.second);
-  console.log('Treść: '.main.bold + content.second);
+  console.log( _('numberPost').main + index.toString().main);
+  console.log( _('author ').main.bold, currentPost.from.name.second);
+  console.log( _('contents ').main.bold + content.second);
 
   if (!full) {
     console.log(
-      'Lajki: '.main.bold + likesCount.toString().second +
-      ' | Komentarze: '.main.bold + commentsCount.toString().second
+      _('likes').main.bold + likesCount.toString().second +
+      _(' comments ').main.bold + commentsCount.toString().second
     );
   } else {
     renderLikes(currentPost.likes);
@@ -73,18 +74,18 @@ var renderLikes = function (likes) {
         return l.name;
       }).join(', ').second + ' ]'.main : 0;
 
-  console.log('Lajki: '.main.bold + like);
+  console.log( _('likes').main.bold + like);
 };
 
 var renderComments = function(count, comments) {
 
-  console.log('\nKomentarze:\n'.main.bold);
+  console.log( _('\n' + 'comments' + '\n').main.bold);
   if (count > 0) {
     for (var i = 0; i < count; i++) {
       renderComment(comments.data[i]);
     }
   } else {
-    console.log('brak...'.disable.italic);
+    console.log( _('lack').disable.italic);
   }
 };
 
@@ -96,7 +97,7 @@ var renderComment = function (comment) {
 
   console.log(date + '\n' + author);
   console.log(msg);
-  console.log('Lajki: '.magenta + likes + '\n');
+  console.log( _('likes ').magenta + likes + '\n');
 };
 
 module.exports = {

@@ -19,6 +19,6 @@
     "precommit-hook": "~1.0.2"
   },
   "scripts": {
-    "test" : "node node_modules/jshint/bin/jshint ."
+    "test": "node node_modules/jshint/bin/jshint ."
   }
 }

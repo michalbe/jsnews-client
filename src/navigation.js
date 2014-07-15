@@ -1,6 +1,7 @@
 'use strict';
 
 var inquirer = require('inquirer');
+var _ = require('./localization');
 
 var inquirerPrompt;
 
@@ -21,8 +22,8 @@ var showCheckBoxes = function (message, choices, cb) {
   closePrompt();
 
   choices.push(new inquirer.Separator());
-  choices.push({name: 'Usuń wszystkie', value: 'all'});
-  choices.push({name: 'Wróć', value: 'back'});
+  choices.push({name: _('deleteAll'), value: 'all'});
+  choices.push({name: _('back'), value: 'back'});
 
   inquirerPrompt = inquirer.prompt({
     message: message,
