@@ -9,9 +9,10 @@
     "url": "git@github.com:michalbe/jsnews-client.git"
   },
   "dependencies": {
-    "fb": "~0.7.0",
     "colors": "~0.6.2",
+    "fb": "~0.7.0",
     "inquirer": "~0.5.1",
+    "l20n": "^1.0.0-rc",
     "node-notifier": "~3.0.4"
   },
   "devDependencies": {
