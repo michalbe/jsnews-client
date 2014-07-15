@@ -51,14 +51,14 @@ var renderPost = function (index, full) {
 
   console.log('\n');
   console.log('-------------------------'.main);
-  console.log( _('numberPost').main + index.toString().main);
+  console.log( _('postNumber').main + index.toString().main);
   console.log( _('author ').main.bold, currentPost.from.name.second);
   console.log( _('contents ').main.bold + content.second);
 
   if (!full) {
     console.log(
-      _('likes').main.bold + likesCount.toString().second +
-      _(' comments ').main.bold + commentsCount.toString().second
+      _('likes').main.bold + likesCount.toString().second + '| '
+      _('comments ').main.bold + commentsCount.toString().second
     );
   } else {
     renderLikes(currentPost.likes);
