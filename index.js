@@ -64,7 +64,7 @@ var wallActions = function (answer) {
     case 'open':
       stopRender = true;
       nav.showMenu(
-        _('postNumber') + postCount +  ')',
+        _('postNumber') + '( 0 - ' + postCount +  ' )',
         openSinglePost,
         function (value) {
           var number = parseInt(value, 10);
@@ -76,7 +76,7 @@ var wallActions = function (answer) {
             return true;
           }
 
-          return _('numerLimit ') + postCount;
+          return _('numerLimit') + ' ' + postCount;
         }
       );
       break;
@@ -191,7 +191,7 @@ var checkLatestPost = function (group, post) {
   ) {
     notification(
       group.name,
-      post.from.name + _(' addedPost'),
+      post.from.name + _('addedPost'),
       post.message && post.message.substr(0, 50) + '...'
     );
     lastCreatedPosts[group.id] = post.id;
@@ -207,7 +207,7 @@ var checkFollowPosts = function (post, id) {
       notification(
         currentGroup.name,
         data.comments.data[updatedComCounts - 1].from.name +
-          _(' commentedFollowedPost'),
+          _('commentedFollowedPost'),
         data.comments.data[updatedComCounts - 1].message.substr(0, 50) + '...'
       );
     }
@@ -253,7 +253,7 @@ var checkLikes = function (group, data) {
                       '';
       notification(
         group.name,
-        likeData.likes[0].name + strOthers + _(' likePost'),
+        likeData.likes[0].name + strOthers + _('likePost'),
         likeData.message
       );
 
@@ -323,7 +323,7 @@ var checkGroupCommentsAndLikes = function (group, data) {
           commentData.comments[lastCommentIndex].message.substr(0, 50) + '...' :
           commentData.comments[lastCommentIndex].message;
         var title = commentData.comments[lastCommentIndex].from.name +
-                    strOthers + _(' commentedPost ') + commentData.message;
+                    strOthers + _('commentedPost') + ' ' + commentData.message;
         notification(
           group.name,
           title,
