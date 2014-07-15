@@ -7,7 +7,7 @@
 <selectPostToDelete 'Zaznacz posty do usunięcia z listy obserwowanych'>
 <followPost 'Obserwuj post'>
 <unfollowPost 'Usuń z obserwowanych'>
-<openPost 'Zobacz post w przeglądarce'>
+<openPostInBrowser 'Zobacz post w przeglądarce'>
 <backList 'Wróć do listy postów'>
 <menu 'Menu'>
 <addedPost 'dodał(a) nowy post'>

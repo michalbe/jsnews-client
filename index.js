@@ -146,7 +146,7 @@ var renderPostMenu = function () {
   }
 
   var options = [
-    {name: _('openPost'), value: 'browser'},
+    {name: _('openPostInBrowser'), value: 'browser'},
     {name: followMsg, value: followValue},
     {name: _('backList'), value: 'back'}
   ];
