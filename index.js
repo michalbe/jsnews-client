@@ -6,6 +6,7 @@ var nav = require('./src/navigation');
 var notification = require('./src/notification');
 var config = require('./src/config');
 var flags = require('./src/watchflags');
+var _ = require('./src/localization');
 
 var currentGroup = -1;
 var currentPost = null;
@@ -33,7 +34,7 @@ var renderGroupMenu = function () {
   });
 
   renderer.clear();
-  nav.showGroupList('Wybierz grupę', groups, function (answer) {
+  nav.showGroupList(_('chooseGroup'), groups, function (answer) {
     currentGroup = config.groups[answer.option];
     renderWall();
   });
@@ -41,10 +42,10 @@ var renderGroupMenu = function () {
 
 var renderWallMenu = function () {
   var options = [
-    {name: 'Otwórz post', value: 'open'},
-    {name: 'Zobacz listę postów obserwowanych', value: 'followlist'},
-    {name: 'Wybierz ponownie grupę', value: 'groups'},
-    {name: 'Zamknij  aplikacje', value: 'close'}
+    {name: _('openPost'), value: 'open'},
+    {name: _('showFavorites'), value: 'followlist'},
+    {name: _('chooseAgainGroup'), value: 'groups'},
+    {name: _('closeApp'), value: 'close'}
   ];
 
   nav.showGroupList('Menu', options, wallActions);
@@ -63,7 +64,7 @@ var wallActions = function (answer) {
     case 'open':
       stopRender = true;
       nav.showMenu(
-        'Podaj numer postu do otwarcia (0-' + postCount +  ')',
+        _('numberPost') + postCount +  ')',
         openSinglePost,
         function (value) {
           var number = parseInt(value, 10);
@@ -75,7 +76,7 @@ var wallActions = function (answer) {
             return true;
           }
 
-          return 'Musisz podać liczbę z przedziału od 0 do ' + postCount;
+          return _('numerLimit ') + postCount;
         }
       );
       break;
@@ -91,7 +92,7 @@ var wallActions = function (answer) {
       }
       stopRender = true;
       nav.showCheckBoxes(
-        'Zaznacz posty do usunięcia z listy obserwowanych',
+        _('selectDeletePost'),
         choices,
         function (answer) {
           removeFollowPost(answer);
@@ -134,23 +135,23 @@ var openSinglePost = function (answer) {
 };
 
 var renderPostMenu = function () {
-  var followMsg = 'Obserwuj post';
+  var followMsg = _('followPost');
   var followValue = 'follow';
 
   for (var i = 0, l = follows.length; i < l; i++) {
     if (follows[i].id === renderer.getPost(currentPost).id) {
-      followMsg = 'Usuń z obserwowanych';
+      followMsg = _('unfollowPost');
       followValue = 'unfollow.' + i;
     }
   }
 
   var options = [
-    {name: 'Zobacz post w przeglądarce', value: 'browser'},
+    {name: _('seePost'), value: 'browser'},
     {name: followMsg, value: followValue},
-    {name: 'Wróć do listy postów', value: 'back'}
+    {name: _('backList'), value: 'back'}
   ];
 
-  nav.showGroupList('Menu', options, postActions);
+  nav.showGroupList( _('menu'), options, postActions);
 };
 
 var postActions = function (answer) {
@@ -190,7 +191,7 @@ var checkLatestPost = function (group, post) {
   ) {
     notification(
       group.name,
-      post.from.name + ' dodał(a) nowy post',
+      post.from.name + _(' addedPost'),
       post.message && post.message.substr(0, 50) + '...'
     );
     lastCreatedPosts[group.id] = post.id;
@@ -206,7 +207,7 @@ var checkFollowPosts = function (post, id) {
       notification(
         currentGroup.name,
         data.comments.data[updatedComCounts - 1].from.name +
-          ' skomentował(a) obserwowany post',
+          _(' commentedFollowPost'),
         data.comments.data[updatedComCounts - 1].message.substr(0, 50) + '...'
       );
     }
@@ -248,11 +249,11 @@ var checkLikes = function (group, data) {
                         postLikeCache[index].likes.length : 0;
       var countNewLikes = likeData.likes.length - cacheLength;
       var strOthers = countNewLikes > 1 ?
-                      ' i ' + (countNewLikes - 1) + ' innych' :
+                      ' i ' + (countNewLikes - 1) + _(' other') :
                       '';
       notification(
         group.name,
-        likeData.likes[0].name + strOthers + ' lubi post',
+        likeData.likes[0].name + strOthers + _(' likePost'),
         likeData.message
       );
 
@@ -314,7 +315,7 @@ var checkGroupCommentsAndLikes = function (group, data) {
         group.watchFlags & flags.FLAG_WATCH_NEW_COMMENTS
       ) {
         var strOthers = countNewComments > 1 ?
-                        ' i ' + (countNewComments - 1) + ' innych' :
+                        ' i ' + (countNewComments - 1) + _(' other') :
                         '';
         var lastCommentIndex = commentData.comments.length - 1;
         var message =
@@ -322,7 +323,7 @@ var checkGroupCommentsAndLikes = function (group, data) {
           commentData.comments[lastCommentIndex].message.substr(0, 50) + '...' :
           commentData.comments[lastCommentIndex].message;
         var title = commentData.comments[lastCommentIndex].from.name +
-                    strOthers + ' skomentował post: ' + commentData.message;
+                    strOthers + _(' commentedPost ') + commentData.message;
         notification(
           group.name,
           title,
@@ -343,7 +344,7 @@ var checkGroupCommentsAndLikes = function (group, data) {
           ) {
             notification(
               group.name,
-              'Nowe polubienie komentarza',
+              _('newLikedComment'),
               commentLikeData.message
             );
           }

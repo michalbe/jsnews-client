@@ -3,6 +3,7 @@
 var flags = require('./watchflags');
 
 module.exports = {
+  language: 'pl',
   client_id: 'XXXXXXXXXXXXXXXXXXX',
   client_secret: 'XXXXXXXXXXXXXXX',
   maxPosts: 8,
