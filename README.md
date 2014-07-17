@@ -11,7 +11,7 @@ JS News: Client to oparty na node.js, commandlineowy klient do Waszej ulubionej 
 ### Co nowego? ###
 Changelog:
 
-v 1.2.0 (:church: _concordat_) - 17 lipca 2014, autorzy: [![leriel](https://avatars1.githubusercontent.com/u/6944137?s=15) Jedrzej Gontarczyk](https://github.com/leriel) & [Maciej Slubowski](https://github.com/Maciek10)
+v 1.2.0 (:church: _concordat_) - 17 lipca 2014, autorzy: [![leriel](https://avatars1.githubusercontent.com/u/6944137?s=15) Jedrzej Gontarczyk](https://github.com/leriel) & [![Maciek10](https://avatars1.githubusercontent.com/u/6490486?s=15) Maciej Slubowski](https://github.com/Maciek10)
   * Wsparcie dla wielu języków z wykorzystaniem [L20N](https://github.com/l20n/l20n.js)
     * Dodano `locale` dla języka polskiego
   * Zamknięto [Issue #33](https://github.com/michalbe/jsnews-client/issues/33) (Lista obserwowanych nie czyści się już po restarcie aplikacji):
