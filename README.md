@@ -19,6 +19,7 @@ Changelog:
     * Cache z pamięci przesunięto do bazy danych
   * Poprawki drobnych bugów.
 
+
   v 1.1.1 (:tv: _colortv_) - 27 czerwca 2014, autor: [![leriel](https://avatars1.githubusercontent.com/u/6944137?s=15) Jedrzej Gontarczyk](https://github.com/leriel)
   * Możliwość zdefiniowania w configu flag notyfikacyjnych dla każdej z grup:
     * **FLAG_WATCH_NONE** - nie wyświetlaj żadnych notyfikacji dla grupy
