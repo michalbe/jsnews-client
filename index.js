@@ -7,15 +7,21 @@ var notification = require('./src/notification');
 var config = require('./src/config');
 var flags = require('./src/watchflags');
 var _ = require('./src/localization');
+var level = require('level');
 
+var db = level('./jsnews-cache');
 var currentGroup = -1;
 var currentPost = null;
-var groupCache = [];
-var groupLikeCache = [];
-var groupCommentCache = [];
-var postLikeCache = [];
-var postCommentCache = [];
-var postCommentLikeCache = [];
+var STATE_LOADING = -1;
+var caches = {
+  group: STATE_LOADING,
+  groupLike: STATE_LOADING,
+  groupComment: STATE_LOADING,
+  postLike: STATE_LOADING,
+  postComment: STATE_LOADING,
+  postCommentLike: STATE_LOADING
+};
+var cacheKeys = Object.keys(caches);
 var lastCreatedPosts = [];
 
 var FB = null;
@@ -35,6 +41,7 @@ var renderGroupMenu = function () {
 
   renderer.clear();
   nav.showGroupList(_('chooseGroup'), groups, function (answer) {
+    stopRender = false;
     currentGroup = config.groups[answer.option];
     renderWall();
   });
@@ -58,6 +65,7 @@ var wallActions = function (answer) {
 
   switch(answer) {
     case 'groups':
+      stopRender = true;
       renderer.clear();
       renderGroupMenu();
       break;
@@ -100,7 +108,7 @@ var wallActions = function (answer) {
       );
       break;
     case 'close':
-      process.exit();
+      cleanOnExit();
       break;
     default:
       renderWallMenu();
@@ -218,6 +226,10 @@ var checkFollowPosts = function (post, id) {
 
 var checkLikes = function (group, data) {
   var postLikeData = {};
+
+  if (caches.groupLike == STATE_LOADING || caches.postLike == STATE_LOADING) {
+    return;
+  }
   data.forEach(function (post) {
     if(post.likes && post.likes.data) {
       postLikeData[post.id] = {
@@ -229,12 +241,12 @@ var checkLikes = function (group, data) {
     }
   });
 
-  var likeDataString = JSON.stringify(postLikeData);
+  var likeString = JSON.stringify(postLikeData);
 
   if (
-    groupLikeCache &&
-    groupLikeCache[group.id] &&
-    groupLikeCache[group.id] === likeDataString
+    caches.groupLike &&
+    caches.groupLike[group.id] &&
+    caches.groupLike[group.id] === likeString
   ) {
     return;
   }
@@ -242,11 +254,11 @@ var checkLikes = function (group, data) {
   for (var index in postLikeData) {
     var likeData = postLikeData[index];
     if(
-      !postLikeCache[index] ||
-      JSON.stringify(likeData) !== JSON.stringify(postLikeCache[index])
+      !caches.postLike[index] ||
+      JSON.stringify(likeData) !== JSON.stringify(caches.postLike[index])
     ) {
-      var cacheLength = postLikeCache[index] && postLikeCache[index].likes ?
-                        postLikeCache[index].likes.length : 0;
+      var cacheLength = caches.postLike[index] && caches.postLike[index].likes ?
+                        caches.postLike[index].likes.length : 0;
       var countNewLikes = likeData.likes.length - cacheLength;
       var strOthers = countNewLikes > 1 ?
                       ' i ' + (countNewLikes - 1) + ' ' + _('others') :
@@ -258,14 +270,24 @@ var checkLikes = function (group, data) {
       );
 
     }
-    postLikeCache[index] = likeData;
+    caches.postLike[index] = likeData;
   }
-  groupLikeCache[group.id] = likeDataString;
+  caches.groupLike[group.id] = likeString;
+  saveCache('groupLike');
+  saveCache('postLike');
 };
 
 var checkGroupCommentsAndLikes = function (group, data) {
   var postCommentData = {},
     commentsLikeData = {};
+
+  if (caches.groupComment == STATE_LOADING ||
+    caches.postComment == STATE_LOADING ||
+    caches.postCommentLike == STATE_LOADING)
+  {
+    return;
+  }
+
   data.forEach(function (post) {
     if(post.comments && post.comments.data) {
       postCommentData[post.id] = {
@@ -287,13 +309,13 @@ var checkGroupCommentsAndLikes = function (group, data) {
     }
   });
 
-  var commentDataString = JSON.stringify(postCommentData);
-  var commentLikeDataString = JSON.stringify(commentsLikeData);
+  var commentString = JSON.stringify(postCommentData);
+  var commentLikeString = JSON.stringify(commentsLikeData);
 
   if (
-    groupCommentCache &&
-    groupCommentCache[group.id] &&
-    groupCommentCache[group.id] === commentDataString
+    caches.groupComment &&
+    caches.groupComment[group.id] &&
+    caches.groupComment[group.id] === commentString
   ) {
     return;
   }
@@ -301,12 +323,12 @@ var checkGroupCommentsAndLikes = function (group, data) {
   for (var index in postCommentData) {
     var commentData = postCommentData[index];
     if(
-      !postCommentCache[index] ||
-      JSON.stringify(commentData) !== JSON.stringify(postCommentCache[index])
+      !caches.postComment[index] ||
+      JSON.stringify(commentData) !== JSON.stringify(caches.postComment[index])
     ) {
-      var cacheLength = postCommentCache[index] &&
-                        postCommentCache[index].comments ?
-                          postCommentCache[index].comments.length :
+      var cacheLength = caches.postComment[index] &&
+                        caches.postComment[index].comments ?
+                          caches.postComment[index].comments.length :
                           0;
 
       var countNewComments = commentData.comments.length - cacheLength;
@@ -332,15 +354,15 @@ var checkGroupCommentsAndLikes = function (group, data) {
       } else if (
         countNewComments <= 0 &&
         group.watchFlags & flags.FLAG_WATCH_NEW_COMMENT_LIKES &&
-        postCommentLikeCache &&
-        postCommentLikeCache[group.id] &&
-        JSON.stringify(postCommentLikeCache[group.id]) !== commentLikeDataString
+        caches.postCommentLike &&
+        caches.postCommentLike[group.id] &&
+        JSON.stringify(caches.postCommentLike[group.id]) !== commentLikeString
       ) {
         for (var commentId in commentsLikeData) {
           var commentLikeData = commentsLikeData[commentId];
           if(
             commentLikeData.likes >
-            postCommentLikeCache[group.id][commentId].likes
+            caches.postCommentLike[group.id][commentId].likes
           ) {
             notification(
               group.name,
@@ -351,10 +373,13 @@ var checkGroupCommentsAndLikes = function (group, data) {
         }
       }
     }
-    postCommentCache[index] = commentData;
+    caches.postComment[index] = commentData;
   }
-  groupCommentCache[group.id] = commentDataString;
-  postCommentLikeCache[group.id] = commentsLikeData;
+  saveCache('postComment');
+  caches.groupComment[group.id] = commentString;
+  saveCache('groupComment');
+  caches.postCommentLike[group.id] = commentsLikeData;
+  saveCache('postCommentLike');
 
 };
 
@@ -367,17 +392,22 @@ var checkForNotifications = function () {
           setTimeout(checkForNotifications, config.refreshTime);
         }
 
+        if (caches.group == STATE_LOADING || !data[0]) {
+          return;
+        }
+
         var dataString = JSON.stringify(data);
 
         if (
-          groupCache &&
-          groupCache[group.id] &&
-          groupCache[group.id] === dataString
+          caches.group &&
+          caches.group[group.id] &&
+          caches.group[group.id] === dataString
         ) {
           return;
         }
 
-        groupCache[group.id] = JSON.stringify(data);
+        caches.group[group.id] = dataString;
+        saveCache('group');
         if(group.watchFlags & flags.FLAG_WATCH_NEW_POSTS) {
           checkLatestPost(group, data[0]);
         }
@@ -420,10 +450,34 @@ var renderWall = function () {
   });
 };
 
+var cleanOnExit = function() {
+  process.exit();
+};
+
+var saveCache = function(key) {
+  var data = JSON.stringify(caches[key]);
+  db.put(key, data);
+};
+
+var readCache = function(key) {
+  db.get(key, function(err, value) {
+    if (err) {
+      caches[key] = {};
+      return;
+    }
+    try {
+      caches[key] = JSON.parse(value);
+    } catch (parseErr) {
+      caches[key] = {};
+    }
+  });
+};
+
 var init = function () {
   if (currentGroup > -1) {
     renderWall();
   } else {
+    cacheKeys.forEach(readCache);
     data(function (err, api) {
       FB = api;
       renderGroupMenu();
@@ -441,5 +495,9 @@ var init = function () {
     });
   }
 };
+
+process.on('SIGINT', function() {
+    cleanOnExit();
+});
 
 init();
