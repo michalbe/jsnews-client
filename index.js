@@ -8,6 +8,7 @@ var config = require('./src/config');
 var flags = require('./src/watchflags');
 var _ = require('./src/localization');
 var level = require('level');
+var utils = require('./src/utils');
 
 var db = level('./jsnews-cache');
 var currentGroup = -1;
@@ -200,7 +201,7 @@ var checkLatestPost = function (group, post) {
     notification(
       group.name,
       post.from.name + _('addedPost'),
-      post.message && post.message.substr(0, 50) + '...'
+      post.message && utils.trim(post.message, 50)
     );
     lastCreatedPosts[group.id] = post.id;
   }
@@ -212,11 +213,11 @@ var checkFollowPosts = function (post, id) {
     var updatedComCounts = data.comments ? data.comments.data.length : 0;
 
     if (followComCounts !== updatedComCounts && updatedComCounts > 0) {
+      var commentData = data.comments.data[updatedComCounts - 1];
       notification(
         currentGroup.name,
-        data.comments.data[updatedComCounts - 1].from.name +
-          _('commentedFollowedPost'),
-        data.comments.data[updatedComCounts - 1].message.substr(0, 50) + '...'
+        commentData.from.name + _('commentedFollowedPost'),
+        utils.trim(commentData.message, 50)
       );
     }
 
@@ -234,9 +235,7 @@ var checkLikes = function (group, data) {
     if(post.likes && post.likes.data) {
       postLikeData[post.id] = {
         likes: post.likes.data,
-        message: post.message.length > 50 ?
-          post.message.substr(0, 50) + '...' :
-          post.message
+        message: utils.trim(post.message, 50)
       };
     }
   });
@@ -292,17 +291,13 @@ var checkGroupCommentsAndLikes = function (group, data) {
     if(post.comments && post.comments.data) {
       postCommentData[post.id] = {
         comments: post.comments.data,
-        message: post.message.length > 50 ?
-                 post.message.substr(0, 50) + '...' :
-                 post.message
+        message: utils.trim(post.message, 50)
       };
       if(group.watchFlags & flags.FLAG_WATCH_NEW_COMMENT_LIKES) {
         post.comments.data.forEach(function (comment) {
           commentsLikeData[comment.id] = {
             likes: comment.like_count,
-            message: comment.message.length > 50 ?
-                    comment.message.substr(0, 50) + '...' :
-                    comment.message
+            message: utils.trim(comment.message, 50)
           };
         });
       }
@@ -340,11 +335,9 @@ var checkGroupCommentsAndLikes = function (group, data) {
                         ' i ' + (countNewComments - 1) + ' ' + _('others') :
                         '';
         var lastCommentIndex = commentData.comments.length - 1;
-        var message =
-          commentData.comments[lastCommentIndex].message.length > 50 ?
-          commentData.comments[lastCommentIndex].message.substr(0, 50) + '...' :
-          commentData.comments[lastCommentIndex].message;
-        var title = commentData.comments[lastCommentIndex].from.name +
+        var lastComment = commentData.comments[lastCommentIndex];
+        var message = utils.trim(lastComment.message, 50);
+        var title = lastComment.from.name +
                     strOthers + _('commentedPost') + ' ' + commentData.message;
         notification(
           group.name,
