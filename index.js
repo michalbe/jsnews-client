@@ -8,7 +8,7 @@ var config = require('./src/config');
 var flags = require('./src/watchflags');
 var _ = require('./src/localization');
 var level = require('level');
-var utils = require('utils');
+var utils = require('./src/utils');
 
 var db = level('./jsnews-cache');
 var currentGroup = -1;
