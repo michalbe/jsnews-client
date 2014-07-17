@@ -11,7 +11,15 @@ JS News: Client to oparty na node.js, commandlineowy klient do Waszej ulubionej 
 ### Co nowego? ###
 Changelog:
 
-  v 1.1.1 (:tv: _colortv_) - 27 czerwca 2014, autor: [![leriel](https://avatars1.githubusercontent.com/u/6944137?s=15) Jedrzej Gontarczyk](https://github.com/leriel):
+  v 1.2.0 (:church: _concordat_) - 17 lipca 2014, autorzy: [![leriel](https://avatars1.githubusercontent.com/u/6944137?s=15) Jedrzej Gontarczyk](https://github.com/leriel) & [Maciej Slubowski](https://github.com/Maciek10)
+  * Wsparcie dla wielu języków z wykorzystaniem [L20N](https://github.com/l20n/l20n.js)
+    * Dodano `locale` dla języka polskiego
+  * Zamknięto [Issue #33](https://github.com/michalbe/jsnews-client/issues/33):
+    * Zainstalowano [LevelDB](https://code.google.com/p/leveldb/)
+    * Cache z pamięci przesunięto do bazy danych
+  * Poprawki drobnych bugów.
+
+  v 1.1.1 (:tv: _colortv_) - 27 czerwca 2014, autor: [![leriel](https://avatars1.githubusercontent.com/u/6944137?s=15) Jedrzej Gontarczyk](https://github.com/leriel)
   * Możliwość zdefiniowania w configu flag notyfikacyjnych dla każdej z grup:
     * **FLAG_WATCH_NONE** - nie wyświetlaj żadnych notyfikacji dla grupy
     * **FLAG_WATCH_NEW_POSTS** - wyświetlaj notyfikacje dla nowych postów
@@ -21,7 +29,7 @@ Changelog:
   * każda grupa może mieć przypisane wiele flag
 
 
-  v 1.1.0 (:elephant: _hannibal_) - 24 czerwca 2014, autor: [![chemikpil](https://avatars3.githubusercontent.com/u/548664?s=15) Michał Maćkowiak](https://github.com/chemikpil):
+  v 1.1.0 (:elephant: _hannibal_) - 24 czerwca 2014, autor: [![chemikpil](https://avatars3.githubusercontent.com/u/548664?s=15) Michał Maćkowiak](https://github.com/chemikpil)
   * Możliwość przechodzenia pomiędzy grupami zdefiniowanymi w configu
   * Moduł inputu zmienony z readLIne na [inquire](https://www.npmjs.org/package/inquirer)
   * Growl zmieniony na [node-notifier](https://www.npmjs.org/package/node-notifier) (od OS X 10.8 notyfikacje systemowe + wsparcie dla Win i Linuxa)
