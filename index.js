@@ -9,7 +9,6 @@ var flags = require('./src/watchflags');
 var _ = require('./src/localization');
 var level = require('level');
 var utils = require('./src/utils');
-var open = require('open');
 
 var db = level('./jsnews-cache');
 var currentGroup = -1;
@@ -184,7 +183,7 @@ var postActions = function (answer) {
       renderPostMenu();
       break;
     case 'browser':
-      open(renderer.getPostUrl(currentPost));
+      require('child_process').exec('open ' + renderer.getPostUrl(currentPost));
       renderer.renderPost(currentPost, true);
       renderPostMenu();
       break;
