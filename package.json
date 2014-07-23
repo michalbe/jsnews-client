@@ -14,7 +14,8 @@
     "inquirer": "~0.5.1",
     "l20n": "^1.0.0-rc",
     "node-notifier": "~3.0.4",
-    "level": "^0.18.0"
+    "level": "^0.18.0",
+    "open": "0.0.5"
   },
   "devDependencies": {
     "jshint": "~2.5.2",
