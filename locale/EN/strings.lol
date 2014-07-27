@@ -1,26 +1,26 @@
 <openPost 'Open post'>
-<showFavorites 'See the list of watchlist posts'>
+<showFavorites 'Show favorite posts'>
 <closeApp 'Close Applicaton'>
 <chooseGroup 'Choose group'>
-<openPostNumber 'Give the number of post to open'
-<numerLimit 'You must enter a number between  0 to'>
-<selectPostToDelete 'Select the posts to remove from watchlist'>
-<followPost 'Follow post'>
-<unfollowPost 'Remove from watchlist '>
-<openPostInBrowser 'See post in browser'>
-<backList 'Back to posts list'>
+<openPostNumber 'Number of post to open'
+<numerLimit 'You must enter a number between  0 and'>
+<selectPostToDelete 'Select the posts to remove from favorites'>
+<followPost 'Add to favorites'>
+<unfollowPost 'Remove from favorites'>
+<openPostInBrowser 'Open post in the browser'>
+<backList 'Back to the list'>
 <menu 'Menu'>
-<addedPost 'Added new post'>
-<commentedFollowPost 'commented watchlist post'>
-<other 'other'>
-<likePost 'like post'>
-<commentedPost 'commented post:'>
-<newLikedComment 'New liked comment'>
-<quantityPosts 'Quantity posts:'>
-<numberPost 'number of post: '>
+<addedPost 'added new post'>
+<commentedFollowPost 'commented favorite post'>
+<other 'others'>
+<likePost 'liked post'>
+<commentedPost 'commented on post:'>
+<newLikedComment 'New like on a comment'>
+<quantityPosts 'Number of posts:'>
+<numberPost 'Number of the post: '>
 <author 'Author:'>
-<contents 'Contents:'>
-<likes 'Likes'>
+<content 'Contents:'>
+<likes 'Likes:'>
 <comments 'Comments:'>
 <none 'none...'>
 <deleteAll 'Delete all'>
