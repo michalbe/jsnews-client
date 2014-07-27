@@ -17,9 +17,9 @@
 <commentedPost 'commented on post:'>
 <newLikedComment 'New like on a comment'>
 <quantityPosts 'Number of posts:'>
-<numberPost 'Number of the post: '>
+<numberPost 'Post number: '>
 <author 'Author:'>
-<content 'Contents:'>
+<content 'Content:'>
 <likes 'Likes:'>
 <comments 'Comments:'>
 <none 'none...'>
