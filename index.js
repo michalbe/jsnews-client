@@ -135,12 +135,10 @@ var removeFollowPost = function (answer) {
 };
 
 var openSinglePost = function (answer) {
-  var key = answer.value;
-
   stopRender = false;
-  currentPost = key;
+  currentPost = answer.value;
 
-  renderer.renderPost(key, true);
+  renderer.renderPost(currentPost, true);
   renderPostMenu();
 };
 
@@ -205,6 +203,10 @@ var checkLatestPost = function (group, post) {
       post.message && utils.trim(post.message, 50)
     );
     lastCreatedPosts[group.id] = post.id;
+    
+    if (currentPost) {
+      openSinglePost({value: currentPost});
+    }
   }
 };
 
@@ -220,6 +222,9 @@ var checkFollowPosts = function (post, id) {
         commentData.from.name + _('commentedFollowedPost'),
         utils.trim(commentData.message, 50)
       );
+      if (currentPost) {
+        openSinglePost({value: currentPost});
+      }
     }
 
     follows[id] = data;
@@ -265,7 +270,7 @@ var checkLikes = function (group, data) {
                       '';
       notification(
         group.name,
-        likeData.likes[0].name + strOthers + _('likePost'),
+        likeData.likes[0].name + strOthers + ' ' + _('likePost'),
         likeData.message
       );
 
@@ -275,6 +280,10 @@ var checkLikes = function (group, data) {
   caches.groupLike[group.id] = likeString;
   saveCache('groupLike');
   saveCache('postLike');
+  
+  if (currentPost) {
+    openSinglePost({value: currentPost});
+  }
 };
 
 var checkGroupCommentsAndLikes = function (group, data) {
@@ -374,6 +383,10 @@ var checkGroupCommentsAndLikes = function (group, data) {
   saveCache('groupComment');
   caches.postCommentLike[group.id] = commentsLikeData;
   saveCache('postCommentLike');
+  
+  if (currentPost) {
+    openSinglePost({value: currentPost});
+  }
 
 };
 
@@ -382,6 +395,8 @@ var checkForNotifications = function () {
   notifyGroups.forEach(function(group, index) {
     try {
       FB.getWall(group.id, function (err, data) {
+        renderer.setData(data);
+        
         if(index === notifyGroups.length-1) {
           setTimeout(checkForNotifications, config.refreshTime);
         }
